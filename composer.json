@@ -1,0 +1,28 @@
+{
+    "name": "anlutro/l4-settings",
+    "description": "Persistant settings in Laravel 4.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andreas Lutro",
+            "email": "anlutro@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "suggest": {
+        "illuminate/filesystem": "Save settings to a JSON file.",
+        "illuminate/database": "Save settings to a database table."
+    },
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "anlutro\\LaravelSettings\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
