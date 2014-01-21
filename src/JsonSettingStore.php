@@ -21,7 +21,7 @@ class JsonSettingStore extends SettingStore
 
 	public function setPath($path)
 	{
-		if (!$this->files->isDirectory($dir = basename($path))) {
+		if (!$this->files->isDirectory($dir = dirname($path))) {
 			throw new \InvalidArgumentException("Invalid path - $dir is not a directory.");
 		}
 
