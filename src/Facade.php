@@ -13,6 +13,6 @@ class Facade extends \Illuminate\Support\Facades\Facade
 {
 	protected static function getFacadeAccessor()
 	{
-		return 'anlutro\LaravelSettings\SettingManager';
+		return 'anlutro\LaravelSettings\SettingsManager';
 	}
 }
