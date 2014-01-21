@@ -15,11 +15,28 @@ class DatabaseSettingStore extends SettingStore
 {
 	protected $connection;
 	protected $table;
+	protected $queryConstraint;
+	protected $extraColumns = array();
 
 	public function __construct(Connection $connection, $table = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
+	}
+
+	public function setTable($table)
+	{
+		$this->table = $table;
+	}
+
+	public function setConstraint(\Closure $callback)
+	{
+		$this->queryConstraint = $callback;
+	}
+
+	public function setExtraColumns(array $columns)
+	{
+		$this->extraColumns = $columns;
 	}
 
 	protected function write(array $data)
@@ -47,8 +64,10 @@ class DatabaseSettingStore extends SettingStore
 	protected function prepareWriteData($data)
 	{
 		$data = array_dot($data);
-		return array_map(function($key, $value) {
-			return array('key' => $key, 'value' => $value);
+		$extra = $this->extraColumns;
+
+		return array_map(function($key, $value) use($extra) {
+			return array_merge($extra, array('key' => $key, 'value' => $value));
 		}, array_keys($data), array_values($data));
 	}
 
@@ -68,6 +87,8 @@ class DatabaseSettingStore extends SettingStore
 			} elseif (is_object($row)) {
 				$key = $row->key;
 				$value = $row->value;
+			} else {
+				dd($row);
 			}
 
 			array_set($results, $key, $value);
@@ -78,6 +99,10 @@ class DatabaseSettingStore extends SettingStore
 
 	protected function newQuery()
 	{
-		return $this->connection->table($this->table);
+		$query = $this->connection->table($this->table);
+		foreach ($this->extraColumns as $key => $value) {
+			$query->where($key, '=', $value);
+		}
+		return $query;
 	}
 }

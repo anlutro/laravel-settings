@@ -28,6 +28,20 @@ Setting::get('nested.element');
 
 You can call `Setting::save()` explicitly to save changes made, but the library makes sure to auto-save every time the application shuts down if anything has been changed.
 
+#### Database
+
+If you want to store settings for multiple users/clients in the same database you can do so by specifying extra columns:
+
+```php
+<?php
+Setting::setExtraColumns(array('user_id' => Auth::user('id')));
+?>
+```
+
+`where user_id = x` will now be added to the database query when settings are retrieved, and when new settings are saved, the `user_id` will be populated.
+
+#### Extending
+
 This package uses the Laravel 4 Manager class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way.
 
 ```php

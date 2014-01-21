@@ -41,7 +41,6 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 
 	public function testCorrectDataIsRead()
 	{
-		// $this->markTestSkipped('Not yet implemented');
 		$connection = $this->makeConnection();
 		$query = $this->makeQuery($connection);
 
@@ -52,6 +51,35 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('nestone', $store->get('nest.one'));
 		$this->assertEquals('nesttwo', $store->get('nest.two'));
 		$this->assertEquals(array('one', 'two'), $store->get('array'));
+	}
+
+	public function testExtraColumnsAreQueried()
+	{
+		$connection = $this->makeConnection();
+		$query = $this->makeQuery($connection);
+		$query->shouldReceive('where')->once()->with('foo', '=', 'bar')
+			->andReturn(m::self())->getMock()
+			->shouldReceive('get')->once()->andReturn(array(array('key' => 'foo', 'value' => 'bar')));
+		
+		$store = $this->makeStore($connection);
+		$store->setExtraColumns(array('foo' => 'bar'));
+		$this->assertEquals('bar', $store->get('foo'));
+	}
+
+	public function testExtraColumnsAreInserted()
+	{
+		$connection = $this->makeConnection();
+		$query = $this->makeQuery($connection);
+		$query->shouldReceive('where')->times(3)->with('extracol', '=', 'extradata')
+			->andReturn(m::self());
+		$query->shouldReceive('get')->once()->andReturn(array());
+		$query->shouldReceive('truncate')->once();
+		$query->shouldReceive('insert')->once()->with(array(array('key' => 'foo', 'value' => 'bar', 'extracol' => 'extradata')));
+		
+		$store = $this->makeStore($connection);
+		$store->setExtraColumns(array('extracol' => 'extradata'));
+		$store->set('foo', 'bar');
+		$store->save();
 	}
 
 	protected function getPhpData()
