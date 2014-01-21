@@ -8,7 +8,7 @@ Persistant settings for Laravel 4.
 
 Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `app/config/app.php`.
 
-Optional: add `'Settings' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
+Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
 
 Publish the config file by running `php artisan config:publish anlutro/l4-settings`.
 
