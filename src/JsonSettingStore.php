@@ -21,8 +21,8 @@ class JsonSettingStore extends SettingStore
 
 	public function setPath($path)
 	{
-		if (!$this->files->isDirectory($dir = dirname($path))) {
-			throw new \InvalidArgumentException("Invalid path - $dir is not a directory.");
+		if (!$this->files->isWritable($path)) {
+			throw new \InvalidArgumentException("$path is not writable.");
 		}
 
 		$this->path = $path;

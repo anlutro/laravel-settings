@@ -18,7 +18,7 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	public function testSetupWithInvalidPath()
 	{
 		$files = m::mock('Illuminate\Filesystem\Filesystem');
-		$files->shouldReceive('isDirectory')->once()->andReturn(false);
+		$files->shouldReceive('isWritable')->once()->andReturn(false);
 		$store = $this->makeStore($files);
 	}
 
@@ -91,10 +91,10 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 		return json_encode($this->getTestData());
 	}
 
-	protected function makeFilesystem($isDirectory = true)
+	protected function makeFilesystem($isWritable = true)
 	{
 		$mock = m::mock('Illuminate\Filesystem\Filesystem');
-		$mock->shouldReceive('isDirectory')->once()->andReturn($isDirectory);
+		$mock->shouldReceive('isWritable')->once()->andReturn($isWritable);
 		return $mock;
 	}
 
