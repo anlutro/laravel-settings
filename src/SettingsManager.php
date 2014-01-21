@@ -3,7 +3,7 @@
  * Laravel 4 - Persistant Settings
  * 
  * @author   Andreas Lutro <anlutro@gmail.com>
- * @license  http://opensource.org/MIT
+ * @license  http://opensource.org/licenses/MIT
  * @package  l4-settings
  */
 
