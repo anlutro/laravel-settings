@@ -12,6 +12,16 @@ use Mockery as m;
 
 class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testSetupWithInvalidPath()
+	{
+		$files = m::mock('Illuminate\Filesystem\Filesystem');
+		$files->shouldReceive('isDirectory')->once()->andReturn(false);
+		$store = $this->makeStore($files);
+	}
+
 	public function testGetAndSet()
 	{
 		$files = $this->makeFilesystem();
@@ -81,9 +91,11 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 		return json_encode($this->getTestData());
 	}
 
-	protected function makeFilesystem()
+	protected function makeFilesystem($isDirectory = true)
 	{
-		return m::mock('Illuminate\Filesystem\Filesystem');
+		$mock = m::mock('Illuminate\Filesystem\Filesystem');
+		$mock->shouldReceive('isDirectory')->once()->andReturn($isDirectory);
+		return $mock;
 	}
 
 	protected function makeStore($connection)

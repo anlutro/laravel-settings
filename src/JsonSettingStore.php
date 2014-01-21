@@ -16,7 +16,16 @@ class JsonSettingStore extends SettingStore
 	public function __construct(Filesystem $files, $path = null)
 	{
 		$this->files = $files;
-		$this->path = $path ?: storage_path() . '/settings.json';
+		$this->setPath($path ?: storage_path() . '/settings.json');
+	}
+
+	public function setPath($path)
+	{
+		if (!$this->files->isDirectory($dir = basename($path))) {
+			throw new \InvalidArgumentException("Invalid path - $dir is not a directory.");
+		}
+
+		$this->path = $path;
 	}
 
 	protected function read()
