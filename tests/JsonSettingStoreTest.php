@@ -15,20 +15,33 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testSetupWithInvalidPath()
+	public function testExceptionWhenNotWritable()
 	{
 		$files = m::mock('Illuminate\Filesystem\Filesystem');
-		$files->shouldReceive('isWritable')->once()->andReturn(false);
+		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(false);
+		$store = $this->makeStore($files);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testExceptionWhenPutFails()
+	{
+		$files = m::mock('Illuminate\Filesystem\Filesystem');
+		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(false);
+		$files->shouldReceive('put')->once()->with('fakepath', '[]')->andReturn(false);
 		$store = $this->makeStore($files);
 	}
 
 	public function testGetAndSet()
 	{
 		$files = $this->makeFilesystem();
-		$store = $this->makeStore($files);
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('[]');
 
+		$store = $this->makeStore($files);
 		$store->set('foo', 'bar');
 		$this->assertEquals('bar', $store->get('foo'));
 	}
@@ -36,11 +49,12 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	public function testWriteData()
 	{
 		$files = $this->makeFilesystem();
-		$store = $this->makeStore($files);
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('[]');
 		$files->shouldReceive('put')->once()->with('fakepath', $this->getJsonData());
 
+		$store = $this->makeStore($files);
 		$store->set('foo', 'bar');
 		$store->set('nest.one', 'nestone');
 		$store->set('nest.two', 'nesttwo');
@@ -51,10 +65,11 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	public function testReadData()
 	{
 		$files = $this->makeFilesystem();
-		$store = $this->makeStore($files);
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('get')->once()->with('fakepath')->andReturn($this->getJsonData());
 
+		$store = $this->makeStore($files);
 		$this->assertEquals('bar', $store->get('foo'));
 		$this->assertEquals('nestone', $store->get('nest.one'));
 		$this->assertEquals('nesttwo', $store->get('nest.two'));
@@ -64,13 +79,14 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException RuntimeException
 	 */
-	public function testReadInvalidData()
+	public function testExceptionWhenInvalidJson()
 	{
 		$files = $this->makeFilesystem();
-		$store = $this->makeStore($files);
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('[[!1!11]');
 
+		$store = $this->makeStore($files);
 		$store->get('foo');
 	}
 
@@ -91,15 +107,13 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 		return json_encode($this->getTestData());
 	}
 
-	protected function makeFilesystem($isWritable = true)
+	protected function makeFilesystem($exists = true, $isWritable = true)
 	{
-		$mock = m::mock('Illuminate\Filesystem\Filesystem');
-		$mock->shouldReceive('isWritable')->once()->andReturn($isWritable);
-		return $mock;
+		return m::mock('Illuminate\Filesystem\Filesystem');
 	}
 
-	protected function makeStore($connection)
+	protected function makeStore($files, $path = 'fakepath')
 	{
-		return new anlutro\LaravelSettings\JsonSettingStore($connection, 'fakepath');
+		return new anlutro\LaravelSettings\JsonSettingStore($files, $path);
 	}
 }
