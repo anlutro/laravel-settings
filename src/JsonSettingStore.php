@@ -21,6 +21,14 @@ class JsonSettingStore extends SettingStore
 
 	public function setPath($path)
 	{
+		// If the file does not already exist, we will attempt to create it.
+		if (!$this->files->exists($path)) {
+			$result = $this->files->put($path, json_encode(array()));
+			if ($result === false) {
+				throw new \InvalidArgumentException("Could not write to $path.");
+			}
+		}
+
 		if (!$this->files->isWritable($path)) {
 			throw new \InvalidArgumentException("$path is not writable.");
 		}
