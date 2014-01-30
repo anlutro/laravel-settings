@@ -13,32 +13,77 @@ use Illuminate\Database\Connection;
 
 class DatabaseSettingStore extends SettingStore
 {
+	/**
+	 * The database connection instance.
+	 *
+	 * @var Illuminate\Database\Connection
+	 */
 	protected $connection;
+
+	/**
+	 * The table to query from.
+	 *
+	 * @var string
+	 */
 	protected $table;
+
+	/**
+	 * Any query constraints that should be applied.
+	 *
+	 * @var Closure|null
+	 */
 	protected $queryConstraint;
+
+	/**
+	 * Any extra columns that should be added to the rows.
+	 *
+	 * @var array
+	 */
 	protected $extraColumns = array();
 
+	/**
+	 * @param Illuminate\Database\Connection $connection
+	 * @param string                         $table
+	 */
 	public function __construct(Connection $connection, $table = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
 	}
 
+	/**
+	 * Set the table to query from.
+	 *
+	 * @param string $table
+	 */
 	public function setTable($table)
 	{
 		$this->table = $table;
 	}
 
+	/**
+	 * Set the query constraint.
+	 *
+	 * @param Closure $callback
+	 */
 	public function setConstraint(\Closure $callback)
 	{
 		$this->queryConstraint = $callback;
 	}
 
+	/**
+	 * Set extra columns to be added to the rows.
+	 *
+	 * @param array $columns
+	 */
 	public function setExtraColumns(array $columns)
 	{
 		$this->extraColumns = $columns;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function write(array $data)
 	{
 		$this->newQuery()->truncate();
@@ -71,11 +116,21 @@ class DatabaseSettingStore extends SettingStore
 		}, array_keys($data), array_values($data));
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function read()
 	{
 		return $this->parseReadData($this->newQuery()->get());
 	}
 
+	/**
+	 * Parse data coming from the database.
+	 *
+	 * @param  array $data
+	 *
+	 * @return array
+	 */
 	public function parseReadData($data)
 	{
 		$results = array();
@@ -97,6 +152,11 @@ class DatabaseSettingStore extends SettingStore
 		return $results;
 	}
 
+	/**
+	 * Create a new query builder instance.
+	 *
+	 * @return Illuminate\Database\Query\Builder
+	 */
 	protected function newQuery()
 	{
 		$query = $this->connection->table($this->table);

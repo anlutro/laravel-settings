@@ -13,12 +13,21 @@ use Illuminate\Filesystem\Filesystem;
 
 class JsonSettingStore extends SettingStore
 {
+	/**
+	 * @param Illuminate\Filesystem\Filesystem $files
+	 * @param string                           $path
+	 */
 	public function __construct(Filesystem $files, $path = null)
 	{
 		$this->files = $files;
 		$this->setPath($path ?: storage_path() . '/settings.json');
 	}
 
+	/**
+	 * Set the path for the JSON file.
+	 *
+	 * @param string $path
+	 */
 	public function setPath($path)
 	{
 		// If the file does not already exist, we will attempt to create it.
@@ -36,6 +45,9 @@ class JsonSettingStore extends SettingStore
 		$this->path = $path;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function read()
 	{
 		if (!$this->files->exists($this->path)) {
@@ -53,6 +65,9 @@ class JsonSettingStore extends SettingStore
 		return $data;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function write(array $data)
 	{
 		$contents = json_encode($data);

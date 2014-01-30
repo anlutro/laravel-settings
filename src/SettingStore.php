@@ -11,22 +11,60 @@ namespace anlutro\LaravelSettings;
 
 abstract class SettingStore
 {
+	/**
+	 * The settings data.
+	 *
+	 * @var array
+	 */
 	protected $data = array();
+
+	/**
+	 * Whether the store has changed since it was last loaded.
+	 *
+	 * @var boolean
+	 */
 	protected $unsaved = false;
+
+	/**
+	 * Whether the settings data are loaded.
+	 *
+	 * @var boolean
+	 */
 	protected $loaded = false;
 
+	/**
+	 * Get a specific key from the settings data.
+	 *
+	 * @param  string $key
+	 * @param  mixed  $default Optional default value.
+	 *
+	 * @return mixed
+	 */
 	public function get($key, $default = null)
 	{
 		$this->checkLoaded();
 		return array_get($this->data, $key, $default);
 	}
 
+	/**
+	 * Determine if a key exists in the settings data.
+	 *
+	 * @param  string  $key
+	 *
+	 * @return boolean
+	 */
 	public function has($key)
 	{
 		$this->checkLoaded();
 		return array_key_exists($key, $this->data);
 	}
 
+	/**
+	 * Set a specific key to a value in the settings data.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
 	public function set($key, $value)
 	{
 		$this->checkLoaded();
@@ -34,17 +72,30 @@ abstract class SettingStore
 		array_set($this->data, $key, $value);
 	}
 
+	/**
+	 * Unset a key in the settings data.
+	 *
+	 * @param  string $key
+	 */
 	public function forget($key)
 	{
 		if ($this->has($key)) unset($this->data[$keys]);
 	}
 
+	/**
+	 * Get all settings data.
+	 *
+	 * @return array
+	 */
 	public function all()
 	{
 		$this->checkLoaded();
 		return $this->data;
 	}
 
+	/**
+	 * Save any changes done to the settings data.
+	 */
 	public function save()
 	{
 		if (!$this->unsaved) return;
@@ -53,6 +104,9 @@ abstract class SettingStore
 		$this->unsaved = false;
 	}
 
+	/**
+	 * Check if the settings data has been loaded.
+	 */
 	protected function checkLoaded()
 	{
 		if (!$this->loaded) {
