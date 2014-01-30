@@ -166,8 +166,8 @@ class DatabaseSettingStore extends SettingStore
 			$query->where($key, '=', $value);
 		}
 
-		if ($this->constraint !== null) {
-			$callback = $this->constraint;
+		if ($this->queryConstraint !== null) {
+			$callback = $this->queryConstraint;
 			$callback($query);
 		}
 
