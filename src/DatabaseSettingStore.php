@@ -160,9 +160,16 @@ class DatabaseSettingStore extends SettingStore
 	protected function newQuery()
 	{
 		$query = $this->connection->table($this->table);
+
 		foreach ($this->extraColumns as $key => $value) {
 			$query->where($key, '=', $value);
 		}
+
+		if ($this->constraint !== null) {
+			$callback = $this->constraint;
+			$callback($query);
+		}
+
 		return $query;
 	}
 }
