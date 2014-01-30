@@ -143,7 +143,8 @@ class DatabaseSettingStore extends SettingStore
 				$key = $row->key;
 				$value = $row->value;
 			} else {
-				dd($row);
+				$msg = 'Expected array or object, got '.gettype($row);
+				throw new \UnexpectedValueException($msg);
 			}
 
 			array_set($results, $key, $value);
