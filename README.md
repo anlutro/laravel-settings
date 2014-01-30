@@ -23,6 +23,8 @@ You can either access the setting store via its facade or inject it by type-hint
 Setting::set('foo', 'bar');
 Setting::get('foo');
 Setting::get('nested.element');
+Setting::forget('foo');
+$settings = Setting::all();
 ?>
 ```
 
@@ -34,7 +36,7 @@ If you want to store settings for multiple users/clients in the same database yo
 
 ```php
 <?php
-Setting::setExtraColumns(array('user_id' => Auth::user('id')));
+Setting::setExtraColumns(array('user_id' => Auth::user()->id));
 ?>
 ```
 
