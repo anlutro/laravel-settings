@@ -12,8 +12,6 @@ Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of al
 
 Publish the config file by running `php artisan config:publish anlutro/l4-settings`.
 
-If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be varchars - how long depends on the amount of data you plan to store there.
-
 ### Usage
 
 You can either access the setting store via its facade or inject it by type-hinting towards the abstract class `anlutro\LaravelSettings\SettingStore`.
@@ -30,7 +28,11 @@ $settings = Setting::all();
 
 You can call `Setting::save()` explicitly to save changes made, but the library makes sure to auto-save every time the application shuts down if anything has been changed.
 
+The package comes with two default setting stores: database and JSON.
+
 #### Database
+
+If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be varchars - how long depends on the amount of data you plan to store there.
 
 If you want to store settings for multiple users/clients in the same database you can do so by specifying extra columns:
 
@@ -41,6 +43,12 @@ Setting::setExtraColumns(array('user_id' => Auth::user()->id));
 ```
 
 `where user_id = x` will now be added to the database query when settings are retrieved, and when new settings are saved, the `user_id` will be populated.
+
+You can also use the `setConstraint` method which takes a closure with `$query` as the only argument - this closure will be ran on every query.
+
+#### JSON
+
+You can modify the path used on run-time using `Setting::setPath($path)`.
 
 #### Extending
 
