@@ -62,14 +62,21 @@ abstract class SettingStore
 	/**
 	 * Set a specific key to a value in the settings data.
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @param string|array $key   Key string or associative array of key => value
+	 * @param mixed        $value Optional only if the first argument is an array
 	 */
-	public function set($key, $value)
+	public function set($key, $value = null)
 	{
 		$this->checkLoaded();
 		$this->unsaved = true;
-		array_set($this->data, $key, $value);
+		
+		if (is_array($key)) {
+			foreach ($key as $k => $v) {
+				array_set($this->data, $k, $v);
+			}
+		} else {
+			array_set($this->data, $key, $value);
+		}
 	}
 
 	/**
