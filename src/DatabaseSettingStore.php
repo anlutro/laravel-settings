@@ -16,7 +16,7 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * The database connection instance.
 	 *
-	 * @var Illuminate\Database\Connection
+	 * @var \Illuminate\Database\Connection
 	 */
 	protected $connection;
 
@@ -42,7 +42,7 @@ class DatabaseSettingStore extends SettingStore
 	protected $extraColumns = array();
 
 	/**
-	 * @param Illuminate\Database\Connection $connection
+	 * @param \Illuminate\Database\Connection $connection
 	 * @param string                         $table
 	 */
 	public function __construct(Connection $connection, $table = null)
@@ -156,7 +156,7 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * Create a new query builder instance.
 	 *
-	 * @return Illuminate\Database\Query\Builder
+	 * @return \Illuminate\Database\Query\Builder
 	 */
 	protected function newQuery()
 	{

@@ -14,7 +14,7 @@ use Illuminate\Filesystem\Filesystem;
 class JsonSettingStore extends SettingStore
 {
 	/**
-	 * @param Illuminate\Filesystem\Filesystem $files
+	 * @param \Illuminate\Filesystem\Filesystem $files
 	 * @param string                           $path
 	 */
 	public function __construct(Filesystem $files, $path = null)
