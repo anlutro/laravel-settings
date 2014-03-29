@@ -1,4 +1,4 @@
-# Laravel Settings [![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings)
+# Laravel Settings [![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-settings.svg)](https://github.com/anlutro/laravel-settings/releases)
 
 Persistant settings for Laravel 4.
 
