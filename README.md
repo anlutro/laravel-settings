@@ -1,4 +1,4 @@
-# Laravel Settings
+# Laravel Settings [![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings)
 
 Persistant settings for Laravel 4.
 
