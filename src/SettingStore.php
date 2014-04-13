@@ -86,7 +86,7 @@ abstract class SettingStore
 	 */
 	public function forget($key)
 	{
-		if ($this->has($key)) unset($this->data[$keys]);
+		if ($this->has($key)) unset($this->data[$key]);
 	}
 
 	/**
