@@ -17,12 +17,12 @@
         "illuminate/database": "Save settings to a database table."
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "mockery/mockery": "0.9.*"
     },
     "autoload": {
         "psr-4": {
             "anlutro\\LaravelSettings\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "prefer-stable": true
 }
