@@ -38,7 +38,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			/**
 			 * Construct the actual manager.
 			 */
-			return new SettingsManager($this->app);
+			return new SettingsManager($app);
 		});
 
 		/**
