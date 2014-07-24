@@ -23,10 +23,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	public function register()
 	{
-		/**
+        /**
+         * Pass in $this->app as a variable, for PHP 5.3 compatibility
+         */
+        $this_app = $this->app;
+        
+        /**
 		 * Bind the manager as a singleton on the container.
-		 */
-		$this->app->bindShared('anlutro\LaravelSettings\SettingsManager', function($app) {
+         */
+		$this->app->bindShared('anlutro\LaravelSettings\SettingsManager', function($app)  use($this_app) {
 			/**
 			 * When the class has been resolved once, make sure that settings
 			 * are saved when the application shuts down.
@@ -38,7 +43,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			/**
 			 * Construct the actual manager.
 			 */
-			return new SettingsManager($this->app);
+			return new SettingsManager($this_app);
 		});
 
 		/**
