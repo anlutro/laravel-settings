@@ -11,6 +11,11 @@ use Mockery as m;
 
 class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 {
+	public function tearDown()
+	{
+		m::close();
+	}
+
 	public function testGetAndSet()
 	{
 		$connection = $this->makeConnection();
@@ -28,8 +33,34 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query = $this->makeQuery($connection);
 
 		$query->shouldReceive('get')->once()->andReturn(array());
-		$query->shouldReceive('truncate')->once();
+		$query->shouldReceive('lists')->once()->andReturn(array());
 		$query->shouldReceive('insert')->once()->with($this->getDbData());
+
+		$store = $this->makeStore($connection);
+		$store->set('foo', 'bar');
+		$store->set('nest.one', 'nestone');
+		$store->set('nest.two', 'nesttwo');
+		$store->set('array', array('one', 'two'));
+		$store->save();
+	}
+
+	public function testCorrectDataIsUpdated()
+	{
+		$connection = $this->makeConnection();
+		$query = $this->makeQuery($connection);
+
+		$query->shouldReceive('get')->once()->andReturn(array(array('key' => 'nest.one', 'value' => 'old')));
+		$query->shouldReceive('lists')->once()->andReturn(array('nest.one'));
+		$dbData = $this->getDbData();
+		unset($dbData['nest.one']);
+		$query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
+			->shouldReceive('update')->with(array('value' => 'nestone'));
+		$test = $this;
+		$query->shouldReceive('insert')->once()->andReturnUsing(function($arg) use($dbData, $test) {
+			foreach ($dbData as $key => $value) {
+				$test->assertContains($value, $arg);
+			}
+		});
 
 		$store = $this->makeStore($connection);
 		$store->set('foo', 'bar');
@@ -60,7 +91,7 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('where')->once()->with('foo', '=', 'bar')
 			->andReturn(m::self())->getMock()
 			->shouldReceive('get')->once()->andReturn(array(array('key' => 'foo', 'value' => 'bar')));
-		
+
 		$store = $this->makeStore($connection);
 		$store->setExtraColumns(array('foo' => 'bar'));
 		$this->assertEquals('bar', $store->get('foo'));
@@ -70,10 +101,10 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 	{
 		$connection = $this->makeConnection();
 		$query = $this->makeQuery($connection);
-		$query->shouldReceive('where')->times(3)->with('extracol', '=', 'extradata')
+		$query->shouldReceive('where')->times(2)->with('extracol', '=', 'extradata')
 			->andReturn(m::self());
 		$query->shouldReceive('get')->once()->andReturn(array());
-		$query->shouldReceive('truncate')->once();
+		$query->shouldReceive('lists')->once()->andReturn(array());
 		$query->shouldReceive('insert')->once()->with(array(array('key' => 'foo', 'value' => 'bar', 'extracol' => 'extradata')));
 		
 		$store = $this->makeStore($connection);

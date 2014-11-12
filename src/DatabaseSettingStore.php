@@ -86,9 +86,29 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	protected function write(array $data)
 	{
-		$this->newQuery()->truncate();
-		$dbData = $this->prepareWriteData($this->data);
-		$this->newQuery()->insert($dbData);
+		$keys = $this->newQuery()
+			->lists('key');
+
+		$updateData = array();
+
+		foreach ($keys as $key) {
+			if (isset($data[$key])) {
+				$updateData[$key] = $data[$key];
+				unset($data[$key]);
+			}
+		}
+
+		foreach ($updateData as $key => $value) {
+			$this->newQuery()
+				->where('key', '=', $key)
+				->update(array('value' => $value));
+		}
+
+		if ($data) {
+			$dbData = $this->prepareWriteData($data);
+			$this->newQuery(true)
+				->insert($dbData);
+		}
 	}
 
 	/**
@@ -156,19 +176,23 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * Create a new query builder instance.
 	 *
+	 * @param  $insert  boolean  Whether the query is an insert or not.
+	 *
 	 * @return \Illuminate\Database\Query\Builder
 	 */
-	protected function newQuery()
+	protected function newQuery($insert = false)
 	{
 		$query = $this->connection->table($this->table);
 
-		foreach ($this->extraColumns as $key => $value) {
-			$query->where($key, '=', $value);
+		if (!$insert) {
+			foreach ($this->extraColumns as $key => $value) {
+				$query->where($key, '=', $value);
+			}
 		}
 
 		if ($this->queryConstraint !== null) {
 			$callback = $this->queryConstraint;
-			$callback($query);
+			$callback($query, $insert);
 		}
 
 		return $query;

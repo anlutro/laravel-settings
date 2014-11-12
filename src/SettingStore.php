@@ -43,6 +43,7 @@ abstract class SettingStore
 	public function get($key, $default = null)
 	{
 		$this->checkLoaded();
+
 		return array_get($this->data, $key, $default);
 	}
 
@@ -56,6 +57,7 @@ abstract class SettingStore
 	public function has($key)
 	{
 		$this->checkLoaded();
+
 		return array_key_exists($key, $this->data);
 	}
 
@@ -97,15 +99,22 @@ abstract class SettingStore
 	public function all()
 	{
 		$this->checkLoaded();
+
 		return $this->data;
 	}
 
 	/**
 	 * Save any changes done to the settings data.
+	 *
+	 * @return void
 	 */
 	public function save()
 	{
-		if (!$this->unsaved) return;
+		if (!$this->unsaved) {
+			// either nothing has been changed, or data has not been loaded, so
+			// do nothing by returning early
+			return;
+		}
 
 		$this->write($this->data);
 		$this->unsaved = false;
