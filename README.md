@@ -1,6 +1,10 @@
-# Laravel Settings [![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings) [![Dependency Status](https://www.versioneye.com/php/anlutro:l4-settings/badge.svg)](https://www.versioneye.com/php/anlutro:l4-settings) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-settings.svg)](https://github.com/anlutro/laravel-settings/releases)
+# Laravel Settings
 
-Persistant settings for Laravel 4.
+[![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings)
+[![Latest Stable Version](https://poser.pugx.org/anlutro/laravel-settings/v/stable.svg)](https://github.com/anlutro/laravel-settings/releases)
+[![License](https://poser.pugx.org/anlutro/laravel-settings/license.svg)](http://opensource.org/licenses/MIT)
+
+Persistant settings for Laravel.
 
 ### Installation
 
@@ -19,7 +23,7 @@ You can either access the setting store via its facade or inject it by type-hint
 ```php
 <?php
 Setting::set('foo', 'bar');
-Setting::get('foo');
+Setting::get('foo', 'default value');
 Setting::get('nested.element');
 Setting::forget('foo');
 $settings = Setting::all();
@@ -38,21 +42,35 @@ If you want to store settings for multiple users/clients in the same database yo
 
 ```php
 <?php
-Setting::setExtraColumns(array('user_id' => Auth::user()->id));
+Setting::setExtraColumns(array(
+	'user_id' => Auth::user()->id
+));
 ?>
 ```
 
 `where user_id = x` will now be added to the database query when settings are retrieved, and when new settings are saved, the `user_id` will be populated.
 
-You can also use the `setConstraint` method which takes a closure with `$query` as the only argument - this closure will be ran on every query.
+If you need more fine-tuned control over which data gets queried, you can use the `setConstraint` method which takes a closure with two arguments:
+
+- `$query` is the query builder instance
+- `$insert` is a boolean telling you whether the query is an insert or not. If it is an insert, you usually don't need to do anything to `$query`.
+
+```php
+<?php
+Setting::setConstraint(function($query, $insert) {
+	if ($insert) return;
+	$query->where(/* ... */);
+});
+?>
+```
 
 #### JSON
 
 You can modify the path used on run-time using `Setting::setPath($path)`.
 
-#### Extending
+#### Extension
 
-This package uses the Laravel 4 Manager class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way.
+This package uses the Laravel 4 Manager class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way. All you need to do is extend the abstract `SettingStore` class, implement the abstract methods and call `Setting::extend`.
 
 ```php
 <?php
