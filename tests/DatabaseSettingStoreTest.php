@@ -55,11 +55,11 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		unset($dbData[1]); // remove the nest.one array member
 		$query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
 			->shouldReceive('update')->with(array('value' => 'nestone'));
-		$test = $this;
-		$query->shouldReceive('insert')->once()->andReturnUsing(function($arg) use($dbData, $test) {
-			$this->assertEquals(count($dbData), count($arg));
+		$self = $this; // 5.3 compatibility
+		$query->shouldReceive('insert')->once()->andReturnUsing(function($arg) use($dbData, $self) {
+			$self->assertEquals(count($dbData), count($arg));
 			foreach ($dbData as $key => $value) {
-				$test->assertContains($value, $arg);
+				$self->assertContains($value, $arg);
 			}
 		});
 
