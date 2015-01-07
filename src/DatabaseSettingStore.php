@@ -219,7 +219,7 @@ class DatabaseSettingStore extends SettingStore
 		return true;
 	}
 
-	public static function arrayUnset(array &$array, $key)
+	protected static function arrayUnset(array &$array, $key)
 	{
 		$parts = explode('.', $key);
 
