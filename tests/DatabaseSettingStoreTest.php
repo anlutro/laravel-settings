@@ -52,11 +52,12 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('get')->once()->andReturn(array(array('key' => 'nest.one', 'value' => 'old')));
 		$query->shouldReceive('lists')->once()->andReturn(array('nest.one'));
 		$dbData = $this->getDbData();
-		unset($dbData['nest.one']);
+		unset($dbData[1]); // remove the nest.one array member
 		$query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
 			->shouldReceive('update')->with(array('value' => 'nestone'));
 		$test = $this;
 		$query->shouldReceive('insert')->once()->andReturnUsing(function($arg) use($dbData, $test) {
+			$this->assertEquals(count($dbData), count($arg));
 			foreach ($dbData as $key => $value) {
 				$test->assertContains($value, $arg);
 			}

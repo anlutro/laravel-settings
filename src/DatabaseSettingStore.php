@@ -92,9 +92,9 @@ class DatabaseSettingStore extends SettingStore
 		$updateData = array();
 
 		foreach ($keys as $key) {
-			if (isset($data[$key])) {
-				$updateData[$key] = $data[$key];
-				unset($data[$key]);
+			if (static::arrayKeyExists($data, $key)) {
+				array_set($data, $key, array_get($data, $key));
+				static::arrayUnset($data, $key);
 			}
 		}
 
@@ -196,5 +196,40 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		return $query;
+	}
+
+	protected static function arrayKeyExists(array $array, $key)
+	{
+		if (array_key_exists($key, $array)) {
+			return true;
+		}
+
+		if (strpos($key, '.') === false) {
+			return false;
+		}
+
+		foreach (explode('.', $key) as $segment) {
+			if (!is_array($array) || !array_key_exists($segment, $array)) {
+				return false;
+			}
+
+			$array = $array[$segment];
+		}
+
+		return true;
+	}
+
+	public static function arrayUnset(array &$array, $key)
+	{
+		$parts = explode('.', $key);
+
+		while (count($parts) > 1) {
+			$part = array_shift($parts);
+			if (isset($array[$part]) && is_array($array[$part])) {
+				$array =& $array[$part];
+			}
+		}
+
+		unset($array[array_shift($parts)]);
 	}
 }
