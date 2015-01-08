@@ -16,7 +16,6 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		// create the IOC container and bind it to the facades.
 		$this->container = new \Illuminate\Container\Container;
 		$this->capsule = new \Illuminate\Database\Capsule\Manager($this->container);
 		$this->capsule->setAsGlobal();
@@ -27,7 +26,6 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 			'prefix'   => '',
 		));
 
-		// create the db table
 		$this->capsule->schema()->create('persistant_settings', function($t) {
 			$t->string('key', 64)->unique();
 			$t->string('value', 4096);
