@@ -1,0 +1,93 @@
+<?php
+/**
+ * Laravel 4 - Persistant Settings
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-settings
+ */
+
+use Mockery as m;
+
+class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
+{
+	protected $container;
+	protected $capsule;
+
+	public function setUp()
+	{
+		// create the IOC container and bind it to the facades.
+		$this->container = new \Illuminate\Container\Container;
+		$this->capsule = new \Illuminate\Database\Capsule\Manager($this->container);
+		$this->capsule->setAsGlobal();
+		$this->container['db'] = $this->capsule;
+		$this->capsule->addConnection([
+			'driver'   => 'sqlite',
+			'database' => ':memory:',
+			'prefix'   => '',
+		]);
+
+		// create the db table
+		$this->capsule->schema()->create('persistant_settings', function($t) {
+			$t->string('key', 64)->unique();
+			$t->string('value', 4096);
+		});
+	}
+
+	public function tearDown()
+	{
+		$this->capsule->schema()->drop('persistant_settings');
+		unset($this->capsule);
+		unset($this->container);
+	}
+
+	public function makeSettingStore()
+	{
+		return new \anlutro\LaravelSettings\DatabaseSettingStore($this->capsule->getConnection());
+	}
+
+	/** @test */
+	public function issue()
+	{
+		// batch 1 of data
+		$s = $this->makeSettingStore();
+		$s->set([
+			'one' => 'one_old',
+			'two.one' => 'one_old',
+			'two.two' => 'two_old',
+			'three.one' => 'one_old',
+		]);
+		$s->save();
+
+		// batch 2 of data
+		$s = $this->makeSettingStore();
+		$s->set([
+			'one' => 'one_new',
+			'two.two' => 'two_new',
+			'three.two' => 'two_new',
+		]);
+		$s->save();
+
+		// batch 3 of data
+		$s = $this->makeSettingStore();
+		$s->set([
+			'one' => 'one_extra_new',
+		]);
+		$s->save();
+
+		// check that data is correct
+		$expected = [
+			'one' => 'one_extra_new',
+			'two' => [
+				'one' => 'one_old',
+				'two' => 'two_new',
+			],
+			'three' => [
+				'one' => 'one_old',
+				'two' => 'two_new',
+			],
+		];
+		$s = $this->makeSettingStore();
+		$this->assertEquals($expected, $s->all());
+	}
+}

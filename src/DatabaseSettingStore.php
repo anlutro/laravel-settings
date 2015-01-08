@@ -90,11 +90,12 @@ class DatabaseSettingStore extends SettingStore
 			->lists('key');
 
 		$updateData = array();
+		$dotData = array_dot($data);
 
 		foreach ($keys as $key) {
-			if (static::arrayKeyExists($data, $key)) {
-				array_set($data, $key, array_get($data, $key));
-				static::arrayUnset($data, $key);
+			if (isset($dotData[$key])) {
+				$updateData[$key] = $dotData[$key];
+				unset($dotData[$key]);
 			}
 		}
 
@@ -104,8 +105,8 @@ class DatabaseSettingStore extends SettingStore
 				->update(array('value' => $value));
 		}
 
-		if ($data) {
-			$dbData = $this->prepareWriteData($data);
+		if ($dotData) {
+			$dbData = $this->prepareWriteData($dotData);
 			$this->newQuery(true)
 				->insert($dbData);
 		}
@@ -113,22 +114,15 @@ class DatabaseSettingStore extends SettingStore
 
 	/**
 	 * Transforms settings data into an array ready to be insterted into the
-	 * database.
-	 * 
-	 * ['foo' => ['bar' => 1, 'baz', => 2]] is first transformed into
-	 * ['foo.bar' => 1, 'foo.baz' => 2] which is then transformed into
-	 * [['key' => 'foo.bar', 'value' => 1], ...]
-	 * 
-	 * ['foo' => ['bar', 'baz']] is transformed into
-	 * ['foo.0' => 'bar', 'foo.1' => 'baz'] and so on.
+	 * database. Call array_dot on a multidimensional array before passing it
+	 * into this method!
 	 *
-	 * @param  array $data
+	 * @param  array $data Call array_dot on a multidimensional array before passing it into this method!
 	 *
 	 * @return array
 	 */
-	protected function prepareWriteData($data)
+	protected function prepareWriteData(array $data)
 	{
-		$data = array_dot($data);
 		$extra = $this->extraColumns;
 
 		return array_map(function($key, $value) use($extra) {
@@ -196,40 +190,5 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		return $query;
-	}
-
-	protected static function arrayKeyExists(array $array, $key)
-	{
-		if (array_key_exists($key, $array)) {
-			return true;
-		}
-
-		if (strpos($key, '.') === false) {
-			return false;
-		}
-
-		foreach (explode('.', $key) as $segment) {
-			if (!is_array($array) || !array_key_exists($segment, $array)) {
-				return false;
-			}
-
-			$array = $array[$segment];
-		}
-
-		return true;
-	}
-
-	protected static function arrayUnset(array &$array, $key)
-	{
-		$parts = explode('.', $key);
-
-		while (count($parts) > 1) {
-			$part = array_shift($parts);
-			if (isset($array[$part]) && is_array($array[$part])) {
-				$array =& $array[$part];
-			}
-		}
-
-		unset($array[array_shift($parts)]);
 	}
 }
