@@ -21,11 +21,11 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 		$this->capsule = new \Illuminate\Database\Capsule\Manager($this->container);
 		$this->capsule->setAsGlobal();
 		$this->container['db'] = $this->capsule;
-		$this->capsule->addConnection([
+		$this->capsule->addConnection(array(
 			'driver'   => 'sqlite',
 			'database' => ':memory:',
 			'prefix'   => '',
-		]);
+		));
 
 		// create the db table
 		$this->capsule->schema()->create('persistant_settings', function($t) {
@@ -51,42 +51,42 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 	{
 		// batch 1 of data
 		$s = $this->makeSettingStore();
-		$s->set([
+		$s->set(array(
 			'one' => 'one_old',
 			'two.one' => 'one_old',
 			'two.two' => 'two_old',
 			'three.one' => 'one_old',
-		]);
+		));
 		$s->save();
 
 		// batch 2 of data
 		$s = $this->makeSettingStore();
-		$s->set([
+		$s->set(array(
 			'one' => 'one_new',
 			'two.two' => 'two_new',
 			'three.two' => 'two_new',
-		]);
+		));
 		$s->save();
 
 		// batch 3 of data
 		$s = $this->makeSettingStore();
-		$s->set([
+		$s->set(array(
 			'one' => 'one_extra_new',
-		]);
+		));
 		$s->save();
 
 		// check that data is correct
-		$expected = [
+		$expected = array(
 			'one' => 'one_extra_new',
-			'two' => [
+			'two' => array(
 				'one' => 'one_old',
 				'two' => 'two_new',
-			],
-			'three' => [
+			),
+			'three' => array(
 				'one' => 'one_old',
 				'two' => 'two_new',
-			],
-		];
+			),
+		);
 		$s = $this->makeSettingStore();
 		$this->assertEquals($expected, $s->all());
 	}
