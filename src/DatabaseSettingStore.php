@@ -90,12 +90,12 @@ class DatabaseSettingStore extends SettingStore
 			->lists('key');
 
 		$updateData = array();
-		$dotData = array_dot($data);
+		$insertData = array_dot($data);
 
 		foreach ($keys as $key) {
-			if (isset($dotData[$key])) {
-				$updateData[$key] = $dotData[$key];
-				unset($dotData[$key]);
+			if (isset($insertData[$key])) {
+				$updateData[$key] = $insertData[$key];
+				unset($insertData[$key]);
 			}
 		}
 
@@ -105,10 +105,9 @@ class DatabaseSettingStore extends SettingStore
 				->update(array('value' => $value));
 		}
 
-		if ($dotData) {
-			$dbData = $this->prepareWriteData($dotData);
+		if ($insertData) {
 			$this->newQuery(true)
-				->insert($dbData);
+				->insert($this->prepareInsertData($insertData));
 		}
 	}
 
@@ -121,13 +120,24 @@ class DatabaseSettingStore extends SettingStore
 	 *
 	 * @return array
 	 */
-	protected function prepareWriteData(array $data)
+	protected function prepareInsertData(array $data)
 	{
-		$extra = $this->extraColumns;
+		$dbData = array();
 
-		return array_map(function($key, $value) use($extra) {
-			return array_merge($extra, array('key' => $key, 'value' => $value));
-		}, array_keys($data), array_values($data));
+		if ($this->extraColumns) {
+			foreach ($data as $key => $value) {
+				$dbData[] = array_merge(
+					$this->extraColumns,
+					array('key' => $key, 'value' => $value)
+				);
+			}
+		} else {
+			foreach ($data as $key => $value) {
+				$dbData[] = array('key' => $key, 'value' => $value);
+			}
+		}
+
+		return $dbData;
 	}
 
 	/**
