@@ -9,6 +9,8 @@
 
 namespace anlutro\LaravelSettings;
 
+use Illuminate\Foundation\Application;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 	/**
@@ -54,9 +56,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->app['config']->package(
-			'anlutro/l4-settings', __DIR__ . '/config', 'anlutro/l4-settings'
-		);
+		if (version_compare(Application::VERSION, '5.0', '>=')) {
+			$this->mergeConfigFrom(__DIR__ . '/config/config.php', 'anlutro/l4-settings');
+			$this->publishes([
+				__DIR__.'/config/config.php' => config_path('anlutro/l4-settings.php')
+			], 'config');
+		} else {
+			$this->app['config']->package(
+				'anlutro/l4-settings', __DIR__ . '/config', 'anlutro/l4-settings'
+			);
+		}
 	}
 
 	/**
