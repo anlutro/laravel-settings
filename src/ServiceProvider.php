@@ -33,9 +33,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			 * When the class has been resolved once, make sure that settings
 			 * are saved when the application shuts down.
 			 */
-			$app->shutdown(function($app) {
-				$app->make('anlutro\LaravelSettings\SettingStore')->save();
-			});
+			if (version_compare(Application::VERSION, '5.0', '<')) {
+				$app->shutdown(function($app) {
+					$app->make('anlutro\LaravelSettings\SettingStore')->save();
+				});
+			}
 			
 			/**
 			 * Construct the actual manager.
