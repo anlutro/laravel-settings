@@ -14,7 +14,7 @@ Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `app/
 
 Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
 
-Publish the config file by running `php artisan config:publish anlutro/l4-settings`.
+Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5).
 
 ### Usage
 
@@ -30,7 +30,7 @@ $settings = Setting::all();
 ?>
 ```
 
-You can call `Setting::save()` explicitly to save changes made, but the library makes sure to auto-save every time the application shuts down if anything has been changed.
+You can call `Setting::save()` explicitly to save changes made. In Laravel 4.x, the library makes sure to auto-save every time the application shuts down if anything has been changed.
 
 The package comes with two default setting stores: database and JSON.
 
