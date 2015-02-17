@@ -37,7 +37,7 @@ class SettingsManager extends Manager
 	protected function getConfig($key)
 	{
 		if (version_compare(Application::VERSION, '5.0', '>=')) {
-			$key = str_replace('::', '.', $key);
+			$key = str_replace('anlutro/l4-settings::', 'settings.', $key);
 		}
 
 		return $this->app['config']->get($key);
