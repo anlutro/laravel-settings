@@ -119,7 +119,7 @@ class ArrayUtil
 		// iterate through all of $segments except the last one
 		foreach ($segments as $segment) {
 			if (!array_key_exists($segment, $data)) {
-				$data[$segment] = [];
+				return;
 			} else if (!is_array($data[$segment])) {
 				throw new \UnexpectedValueException('Non-array segment encountered');
 			}
