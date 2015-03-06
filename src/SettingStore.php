@@ -9,8 +9,6 @@
 
 namespace anlutro\LaravelSettings;
 
-use Illuminate\Support\Arr;
-
 abstract class SettingStore
 {
 	/**
@@ -46,7 +44,7 @@ abstract class SettingStore
 	{
 		$this->checkLoaded();
 
-		return Arr::get($this->data, $key, $default);
+		return ArrayUtil::get($this->data, $key, $default);
 	}
 
 	/**
@@ -60,7 +58,7 @@ abstract class SettingStore
 	{
 		$this->checkLoaded();
 
-		return Arr::has($this->data, $key);
+		return ArrayUtil::has($this->data, $key);
 	}
 
 	/**
@@ -76,10 +74,10 @@ abstract class SettingStore
 		
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
-				Arr::set($this->data, $k, $v);
+				ArrayUtil::set($this->data, $k, $v);
 			}
 		} else {
-			Arr::set($this->data, $key, $value);
+			ArrayUtil::set($this->data, $key, $value);
 		}
 	}
 
@@ -91,7 +89,7 @@ abstract class SettingStore
 	public function forget($key)
 	{
 		if ($this->has($key)) {
-			Arr::forget($this->data, $key);
+			ArrayUtil::forget($this->data, $key);
 		}
 	}
 

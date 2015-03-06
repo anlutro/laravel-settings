@@ -180,7 +180,7 @@ class DatabaseSettingStore extends SettingStore
 				throw new \UnexpectedValueException($msg);
 			}
 
-			array_set($results, $key, $value);
+			ArrayUtil::set($results, $key, $value);
 		}
 
 		return $results;
