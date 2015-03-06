@@ -92,6 +92,7 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 		$s = $this->makeSettingStore();
 		$s->forget('two.two');
 		$s->save();
+		$s = $this->makeSettingStore();
 		unset($expected['two']['two']);
 		$this->assertEquals($expected, $s->all());
 	}

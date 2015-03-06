@@ -88,6 +88,8 @@ abstract class SettingStore
 	 */
 	public function forget($key)
 	{
+		$this->unsaved = true;
+
 		if ($this->has($key)) {
 			ArrayUtil::forget($this->data, $key);
 		}
