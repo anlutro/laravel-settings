@@ -45,7 +45,7 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
-	public function issue()
+	public function stuffWorks()
 	{
 		// batch 1 of data
 		$s = $this->makeSettingStore();
@@ -86,6 +86,13 @@ class DatabaseSettingFunctionalTest extends PHPUnit_Framework_TestCase
 			),
 		);
 		$s = $this->makeSettingStore();
+		$this->assertEquals($expected, $s->all());
+
+		// remove a setting
+		$s = $this->makeSettingStore();
+		$s->forget('two.two');
+		$s->save();
+		unset($expected['two']['two']);
 		$this->assertEquals($expected, $s->all());
 	}
 }

@@ -89,14 +89,17 @@ class DatabaseSettingStore extends SettingStore
 		$keys = $this->newQuery()
 			->lists('key');
 
-		$updateData = array();
 		$insertData = array_dot($data);
+		$updateData = array();
+		$deleteKeys = array();
 
 		foreach ($keys as $key) {
 			if (isset($insertData[$key])) {
 				$updateData[$key] = $insertData[$key];
-				unset($insertData[$key]);
+			} else {
+				$deleteKeys[] = $key;
 			}
+			unset($insertData[$key]);
 		}
 
 		foreach ($updateData as $key => $value) {
@@ -108,6 +111,12 @@ class DatabaseSettingStore extends SettingStore
 		if ($insertData) {
 			$this->newQuery(true)
 				->insert($this->prepareInsertData($insertData));
+		}
+
+		if ($deleteKeys) {
+			$this->newQuery()
+				->whereIn('key', $deleteKeys)
+				->delete();
 		}
 	}
 
