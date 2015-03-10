@@ -12,9 +12,9 @@ Persistant settings for Laravel.
 
 2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `app/config/app.php`.
 
-Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
-
 3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5). The config file will give you control over which storage engine to use as well as some storage-specific settings.
+
+Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
 
 ### Usage
 
