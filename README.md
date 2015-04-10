@@ -15,6 +15,7 @@ Persistant settings for Laravel.
 3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5). The config file will give you control over which storage engine to use as well as some storage-specific settings.
 
 Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
+Optional: add `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php` for auto-saving of settings when your application shuts down.
 
 ### Usage
 
@@ -30,7 +31,7 @@ $settings = Setting::all();
 ?>
 ```
 
-You can call `Setting::save()` explicitly to save changes made. In Laravel 4.x, the library makes sure to auto-save every time the application shuts down if anything has been changed.
+You can call `Setting::save()` explicitly to save changes made. In Laravel 4.x, the library makes sure to auto-save every time the application shuts down if anything has been changed. In Laravel 5.x you need to add the middleware `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php` to automatically save settings when your application shuts down.
 
 The package comes with two default setting stores: database and JSON.
 
