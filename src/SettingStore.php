@@ -35,8 +35,8 @@ abstract class SettingStore
 	/**
 	 * Get a specific key from the settings data.
 	 *
-	 * @param  string $key
-	 * @param  mixed  $default Optional default value.
+	 * @param  string|array $key
+	 * @param  mixed        $default Optional default value.
 	 *
 	 * @return mixed
 	 */

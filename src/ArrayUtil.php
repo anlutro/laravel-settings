@@ -37,6 +37,10 @@ class ArrayUtil
 			return $data;
 		}
 
+		if (is_array($key)) {
+			return static::getArray($data, $key, $default);
+		}
+
 		foreach (explode('.', $key) as $segment) {
 			if (!is_array($data)) {
 				return $default;
@@ -50,6 +54,17 @@ class ArrayUtil
 		}
 
 		return $data;
+	}
+
+	protected static function getArray(array $input, $keys, $default = null)
+	{
+		$output = [];
+
+		foreach ($keys as $key) {
+			static::set($output, $key, static::get($input, $key, $default));
+		}
+
+		return $output;
 	}
 
 	/**
