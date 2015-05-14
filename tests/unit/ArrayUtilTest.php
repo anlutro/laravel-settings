@@ -15,35 +15,35 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 
 	public function getGetData()
 	{
-		return [
-			[[], 'foo', null],
-			[['foo' => 'bar'], 'foo', 'bar'],
-			[['foo' => 'bar'], 'bar', null],
-			[['foo' => 'bar'], 'foo.bar', null],
-			[['foo' => ['bar' => 'baz']], 'foo.bar', 'baz'],
-			[['foo' => ['bar' => 'baz']], 'foo.baz', null],
-			[['foo' => ['bar' => 'baz']], 'foo', ['bar' => 'baz']],
-			[
-				['foo' => 'bar', 'bar' => 'baz'],
-				['foo', 'bar'],
-				['foo' => 'bar', 'bar' => 'baz']
-			],
-			[
-				['foo' => ['bar' => 'baz'], 'bar' => 'baz'],
-				['foo.bar', 'bar'],
-				['foo' => ['bar' => 'baz'], 'bar' => 'baz'],
-			],
-			[
-				['foo' => ['bar' => 'baz'], 'bar' => 'baz'],
-				['foo.bar'],
-				['foo' => ['bar' => 'baz']],
-			],
-			[
-				['foo' => ['bar' => 'baz'], 'bar' => 'baz'],
-				['foo.bar', 'baz'],
-				['foo' => ['bar' => 'baz'], 'baz' => null],
-			],
-		];
+		return array(
+			array(array(), 'foo', null),
+			array(array('foo' => 'bar'), 'foo', 'bar'),
+			array(array('foo' => 'bar'), 'bar', null),
+			array(array('foo' => 'bar'), 'foo.bar', null),
+			array(array('foo' => array('bar' => 'baz')), 'foo.bar', 'baz'),
+			array(array('foo' => array('bar' => 'baz')), 'foo.baz', null),
+			array(array('foo' => array('bar' => 'baz')), 'foo', array('bar' => 'baz')),
+			array(
+				array('foo' => 'bar', 'bar' => 'baz'),
+				array('foo', 'bar'),
+				array('foo' => 'bar', 'bar' => 'baz')
+			),
+			array(
+				array('foo' => array('bar' => 'baz'), 'bar' => 'baz'),
+				array('foo.bar', 'bar'),
+				array('foo' => array('bar' => 'baz'), 'bar' => 'baz'),
+			),
+			array(
+				array('foo' => array('bar' => 'baz'), 'bar' => 'baz'),
+				array('foo.bar'),
+				array('foo' => array('bar' => 'baz')),
+			),
+			array(
+				array('foo' => array('bar' => 'baz'), 'bar' => 'baz'),
+				array('foo.bar', 'baz'),
+				array('foo' => array('bar' => 'baz'), 'baz' => null),
+			),
+		);
 	}
 
 	/**
@@ -58,50 +58,50 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 
 	public function getSetData()
 	{
-		return [
-			[
-				['foo' => 'bar'],
+		return array(
+			array(
+				array('foo' => 'bar'),
 				'foo',
 				'baz',
-				['foo' => 'baz'],
-			],
-			[
-				[],
+				array('foo' => 'baz'),
+			),
+			array(
+				array(),
 				'foo',
 				'bar',
-				['foo' => 'bar'],
-			],
-			[
-				[],
+				array('foo' => 'bar'),
+			),
+			array(
+				array(),
 				'foo.bar',
 				'baz',
-				['foo' => ['bar' => 'baz']],
-			],
-			[
-				['foo' => ['bar' => 'baz']],
+				array('foo' => array('bar' => 'baz')),
+			),
+			array(
+				array('foo' => array('bar' => 'baz')),
 				'foo.baz',
 				'foo',
-				['foo' => ['bar' => 'baz', 'baz' => 'foo']],
-			],
-			[
-				['foo' => ['bar' => 'baz']],
+				array('foo' => array('bar' => 'baz', 'baz' => 'foo')),
+			),
+			array(
+				array('foo' => array('bar' => 'baz')),
 				'foo.baz.bar',
 				'baz',
-				['foo' => ['bar' => 'baz', 'baz' => ['bar' => 'baz']]],
-			],
-			[
-				[],
+				array('foo' => array('bar' => 'baz', 'baz' => array('bar' => 'baz'))),
+			),
+			array(
+				array(),
 				'foo.bar.baz',
 				'foo',
-				['foo' => ['bar' => ['baz' => 'foo']]],
-			],
-		];
+				array('foo' => array('bar' => array('baz' => 'foo'))),
+			),
+		);
 	}
 
 	/** @test */
 	public function setThrowsExceptionOnNonArraySegment()
 	{
-		$data = ['foo' => 'bar'];
+		$data = array('foo' => 'bar');
 		$this->setExpectedException('UnexpectedValueException', 'Non-array segment encountered');
 		ArrayUtil::set($data, 'foo.bar', 'baz');
 	}
@@ -117,16 +117,16 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 
 	public function getHasData()
 	{
-		return [
-			[[], 'foo', false],
-			[['foo' => 'bar'], 'foo', true],
-			[['foo' => 'bar'], 'bar', false],
-			[['foo' => 'bar'], 'foo.bar', false],
-			[['foo' => ['bar' => 'baz']], 'foo.bar', true],
-			[['foo' => ['bar' => 'baz']], 'foo.baz', false],
-			[['foo' => ['bar' => 'baz']], 'foo', true],
-			[['foo' => null], 'foo', true],
-			[['foo' => ['bar' => null]], 'foo.bar', true],
-		];
+		return array(
+			array(array(), 'foo', false),
+			array(array('foo' => 'bar'), 'foo', true),
+			array(array('foo' => 'bar'), 'bar', false),
+			array(array('foo' => 'bar'), 'foo.bar', false),
+			array(array('foo' => array('bar' => 'baz')), 'foo.bar', true),
+			array(array('foo' => array('bar' => 'baz')), 'foo.baz', false),
+			array(array('foo' => array('bar' => 'baz')), 'foo', true),
+			array(array('foo' => null), 'foo', true),
+			array(array('foo' => array('bar' => null)), 'foo.bar', true),
+		);
 	}
 }

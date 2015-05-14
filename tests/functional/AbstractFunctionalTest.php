@@ -43,7 +43,7 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 	{
 		$store = $this->createStore();
 		$store->set('foo.bar', 'baz');
-		$this->assertStoreEquals($store, ['foo' => ['bar' => 'baz']]);
+		$this->assertStoreEquals($store, array('foo' => array('bar' => 'baz')));
 	}
 
 	/** @test */
@@ -61,10 +61,10 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 		$store = $this->createStore();
 		$store->set('foo', 'bar');
 		$store->set('bar', 'baz');
-		$this->assertStoreEquals($store, ['foo' => 'bar', 'bar' => 'baz']);
+		$this->assertStoreEquals($store, array('foo' => 'bar', 'bar' => 'baz'));
 		
 		$store->forget('foo');
-		$this->assertStoreEquals($store, ['bar' => 'baz']);
+		$this->assertStoreEquals($store, array('bar' => 'baz'));
 	}
 
 	/** @test */
@@ -74,34 +74,34 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 		$store->set('foo.bar', 'baz');
 		$store->set('foo.baz', 'bar');
 		$store->set('bar.foo', 'baz');
-		$this->assertStoreEquals($store, [
-			'foo' => [
+		$this->assertStoreEquals($store, array(
+			'foo' => array(
 				'bar' => 'baz',
 				'baz' => 'bar',
-			],
-			'bar' => [
+			),
+			'bar' => array(
 				'foo' => 'baz',
-			],
-		]);
+			),
+		));
 		
 		$store->forget('foo.bar');
-		$this->assertStoreEquals($store, [
-			'foo' => [
+		$this->assertStoreEquals($store, array(
+			'foo' => array(
 				'baz' => 'bar',
-			],
-			'bar' => [
+			),
+			'bar' => array(
 				'foo' => 'baz',
-			],
-		]);
+			),
+		));
 
 		$store->forget('bar.foo');
-		$expected = [
-			'foo' => [
+		$expected = array(
+			'foo' => array(
 				'baz' => 'bar',
-			],
-			'bar' => [
-			],
-		];
+			),
+			'bar' => array(
+			),
+		);
 		if ($store instanceof DatabaseSettingStore) {
 			unset($expected['bar']);
 		}
@@ -111,9 +111,9 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function can_forget_all()
 	{
-		$store = $this->createStore(['foo' => 'bar']);
-		$this->assertStoreEquals($store, ['foo' => 'bar']);
+		$store = $this->createStore(array('foo' => 'bar'));
+		$this->assertStoreEquals($store, array('foo' => 'bar'));
 		$store->forgetAll();
-		$this->assertStoreEquals($store, []);
+		$this->assertStoreEquals($store, array());
 	}
 }

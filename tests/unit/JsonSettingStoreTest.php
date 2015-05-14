@@ -39,7 +39,7 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 	{
 		$files = $this->mockFilesystem();
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(false);
-		$files->shouldReceive('put')->once()->with('fakepath', '[]')->andReturn(false);
+		$files->shouldReceive('put')->once()->with('fakepath', '{}')->andReturn(false);
 		$store = $this->makeStore($files);
 	}
 
