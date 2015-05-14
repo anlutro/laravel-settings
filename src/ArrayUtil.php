@@ -58,7 +58,7 @@ class ArrayUtil
 
 	protected static function getArray(array $input, $keys, $default = null)
 	{
-		$output = [];
+		$output = array();
 
 		foreach ($keys as $key) {
 			static::set($output, $key, static::get($input, $key, $default));
@@ -108,7 +108,7 @@ class ArrayUtil
 		// iterate through all of $segments except the last one
 		foreach ($segments as $segment) {
 			if (!array_key_exists($segment, $data)) {
-				$data[$segment] = [];
+				$data[$segment] = array();
 			} else if (!is_array($data[$segment])) {
 				throw new \UnexpectedValueException('Non-array segment encountered');
 			}

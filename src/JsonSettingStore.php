@@ -32,7 +32,7 @@ class JsonSettingStore extends SettingStore
 	{
 		// If the file does not already exist, we will attempt to create it.
 		if (!$this->files->exists($path)) {
-			$result = $this->files->put($path, json_encode(array()));
+			$result = $this->files->put($path, '{}');
 			if ($result === false) {
 				throw new \InvalidArgumentException("Could not write to $path.");
 			}
@@ -50,10 +50,6 @@ class JsonSettingStore extends SettingStore
 	 */
 	protected function read()
 	{
-		if (!$this->files->exists($this->path)) {
-			return array();
-		}
-		
 		$contents = $this->files->get($this->path);
 
 		$data = json_decode($contents, true);
@@ -70,7 +66,11 @@ class JsonSettingStore extends SettingStore
 	 */
 	protected function write(array $data)
 	{
-		$contents = json_encode($data);
+		if ($data) {
+			$contents = json_encode($data);
+		} else {
+			$contents = '{}';
+		}
 
 		$this->files->put($this->path, $contents);
 	}
