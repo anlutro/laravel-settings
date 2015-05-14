@@ -103,7 +103,7 @@ abstract class SettingStore
 	public function forgetAll()
 	{
 		$this->unsaved = true;
-		$this->data = [];
+		$this->data = array();
 	}
 
 	/**
