@@ -96,6 +96,17 @@ abstract class SettingStore
 	}
 
 	/**
+	 * Unset all keys in the settings data.
+	 *
+	 * @return void
+	 */
+	public function forgetAll()
+	{
+		$this->unsaved = true;
+		$this->data = [];
+	}
+
+	/**
 	 * Get all settings data.
 	 *
 	 * @return array

@@ -68,6 +68,8 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	public function setConstraint(\Closure $callback)
 	{
+		$this->data = array();
+		$this->loaded = false;
 		$this->queryConstraint = $callback;
 	}
 
@@ -79,6 +81,32 @@ class DatabaseSettingStore extends SettingStore
 	public function setExtraColumns(array $columns)
 	{
 		$this->extraColumns = $columns;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function forget($key)
+	{
+		parent::forget($key);
+
+		// because the database store cannot store empty arrays, remove empty
+		// arrays to keep data consistent before and after saving
+		$segments = explode('.', $key);
+		array_pop($segments);
+
+		while ($segments) {
+			$segment = implode('.', $segments);
+
+			// non-empty array - exit out of the loop
+			if ($this->get($segment)) {
+				break;
+			}
+
+			// remove the empty array and move on to the next segment
+			$this->forget($segment);
+			array_pop($segments);
+		}
 	}
 
 	/**
