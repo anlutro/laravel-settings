@@ -39,7 +39,8 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$store->save();
 	}
 
-	public function testExtraColumnsAreQueried()
+	/** @test */
+	public function extra_columns_are_queried()
 	{
 		$connection = $this->mockConnection();
 		$query = $this->mockQuery($connection);
@@ -54,7 +55,8 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bar', $store->get('foo'));
 	}
 
-	public function testExtraColumnsAreInserted()
+	/** @test */
+	public function extra_columns_are_inserted()
 	{
 		$connection = $this->mockConnection();
 		$query = $this->mockQuery($connection);
