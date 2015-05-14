@@ -27,7 +27,7 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 	public function store_is_initially_empty()
 	{
 		$store = $this->createStore();
-		$this->assertEquals([], $store->all());
+		$this->assertEquals(array(), $store->all());
 	}
 
 	/** @test */
