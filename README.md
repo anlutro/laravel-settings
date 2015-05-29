@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/anlutro/laravel-settings.png?branch=master)](https://travis-ci.org/anlutro/laravel-settings)
 [![Latest Stable Version](https://poser.pugx.org/anlutro/l4-settings/v/stable.svg)](https://github.com/anlutro/laravel-settings/releases)
+[![Total Downloads](https://poser.pugx.org/anlutro/l4-settings/downloads)](https://packagist.org/packages/anlutro/l4-settings)
 [![License](https://poser.pugx.org/anlutro/l4-settings/license.svg)](http://opensource.org/licenses/MIT)
 
 Persistant settings for Laravel.
