@@ -34,6 +34,16 @@ class SettingsManager extends Manager
 		return new DatabaseSettingStore($connection, $table);
 	}
 
+	public function createMemoryDriver()
+	{
+		return new MemorySettingStore();
+	}
+
+	public function createArrayDriver()
+	{
+		return $this->createMemoryDriver();
+	}
+
 	protected function getConfig($key)
 	{
 		if (version_compare(Application::VERSION, '5.0', '>=')) {
