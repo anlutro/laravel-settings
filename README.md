@@ -4,20 +4,23 @@
 [![Latest Stable Version](https://poser.pugx.org/anlutro/l4-settings/v/stable.svg)](https://github.com/anlutro/laravel-settings/releases)
 [![License](https://poser.pugx.org/anlutro/l4-settings/license.svg)](http://opensource.org/licenses/MIT)
 
-Persistant settings for Laravel.
+Persistant, application-wide settings for Laravel.
 
-### Installation
+
+## Installation
 
 1. `composer require anlutro/l4-settings`
 
-2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `app/config/app.php`.
+2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `config/app.php`.
 
 3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5). The config file will give you control over which storage engine to use as well as some storage-specific settings.
 
-Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in the same file.
-Optional: add `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php` for auto-saving of settings when your application shuts down.
+Laravel 5 only: add `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app/Http/Kernel.php` for auto-saving of settings when your application shuts down. If you don't do this, you have to call `Setting::save()` manually after making changes.
 
-### Usage
+Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
+
+
+## Usage
 
 You can either access the setting store via its facade or inject it by type-hinting towards the abstract class `anlutro\LaravelSettings\SettingStore`.
 
@@ -35,7 +38,8 @@ You can call `Setting::save()` explicitly to save changes made. In Laravel 4.x, 
 
 The package comes with two default setting stores: database and JSON.
 
-#### Database
+
+### Database
 
 If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be varchars - how long depends on the amount of data you plan to store there.
 
@@ -65,13 +69,15 @@ Setting::setConstraint(function($query, $insert) {
 ?>
 ```
 
-#### JSON
+
+### JSON
 
 You can modify the path used on run-time using `Setting::setPath($path)`.
 
-#### Extension
 
-This package uses the Laravel 4 Manager class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way. All you need to do is extend the abstract `SettingStore` class, implement the abstract methods and call `Setting::extend`.
+### Custom stores
+
+This package uses the Laravel `Manager` class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way. All you need to do is extend the abstract `SettingStore` class, implement the abstract methods and call `Setting::extend`.
 
 ```php
 <?php
@@ -84,9 +90,11 @@ Setting::extend('mystore', function($app) {
 ?>
 ```
 
+
 ## Contact
 
 Open an issue on GitHub if you have any problems or suggestions.
+
 
 ## License
 
