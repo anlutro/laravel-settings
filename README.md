@@ -6,6 +6,8 @@
 
 Persistant, application-wide settings for Laravel.
 
+Despite the package name, this package works with Laravel 5!
+
 
 ## Installation
 
@@ -14,8 +16,6 @@ Persistant, application-wide settings for Laravel.
 2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `config/app.php`.
 
 3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5). The config file will give you control over which storage engine to use as well as some storage-specific settings.
-
-Laravel 5 only: add `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app/Http/Kernel.php` for auto-saving of settings when your application shuts down. If you don't do this, you have to call `Setting::save()` manually after making changes.
 
 Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
 
@@ -34,16 +34,26 @@ $settings = Setting::all();
 ?>
 ```
 
-You can call `Setting::save()` explicitly to save changes made. In Laravel 4.x, the library makes sure to auto-save every time the application shuts down if anything has been changed. In Laravel 5.x you need to add the middleware `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php` to automatically save settings when your application shuts down.
-
-The package comes with two default setting stores: database and JSON.
+Call `Setting::save()` explicitly to save changes made.
 
 
-### Database
+### Auto-saving
 
-If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be varchars - how long depends on the amount of data you plan to store there.
+In Laravel 4.x, the library makes sure to auto-save every time the application shuts down if anything has been changed.
 
-If you want to store settings for multiple users/clients in the same database you can do so by specifying extra columns:
+In Laravel 5.x, if you add the middleware `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php`, settings will be saved automatically at the end of all HTTP requests, but you'll still need to call `Setting::save()` explicitly in console commands, queue workers etc.
+
+
+### JSON storage
+
+You can modify the path used on run-time using `Setting::setPath($path)`.
+
+
+### Database storage
+
+If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be string-type (varchar or text) - how long depends on the amount of data you plan to store there.
+
+For example, if you want to store settings for multiple users/clients in the same database you can do so by specifying extra columns:
 
 ```php
 <?php
@@ -68,11 +78,6 @@ Setting::setConstraint(function($query, $insert) {
 });
 ?>
 ```
-
-
-### JSON
-
-You can modify the path used on run-time using `Setting::setPath($path)`.
 
 
 ### Custom stores
