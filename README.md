@@ -6,19 +6,15 @@
 
 Persistant, application-wide settings for Laravel.
 
-Despite the package name, this package works with Laravel 5!
+Despite the package name, this package works with Laravel 5.x!
 
 
 ## Installation
 
 1. `composer require anlutro/l4-settings`
-
 2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `config/app.php`.
-
-3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5). The config file will give you control over which storage engine to use as well as some storage-specific settings.
-
-Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
-
+3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5.x). The config file will give you control over which storage engine to use as well as some storage-specific settings.
+4. Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
 
 ## Usage
 
@@ -51,7 +47,11 @@ You can modify the path used on run-time using `Setting::setPath($path)`.
 
 ### Database storage
 
-If you use the database store you need to create the table yourself. It needs two columns - key and value, both should be string-type (varchar or text) - how long depends on the amount of data you plan to store there.
+#### Using Migration File
+
+If you use the database store you need to run `php artisan migrate --package=anlutro/l4-settings` (Laravel 4.x) or `php artisan migrate --path=vendor/anlutro/l4-settings/src/migrations` (Laravel 5.x) to generate the table.
+
+#### Example
 
 For example, if you want to store settings for multiple users/clients in the same database you can do so by specifying extra columns:
 
@@ -78,7 +78,6 @@ Setting::setConstraint(function($query, $insert) {
 });
 ?>
 ```
-
 
 ### Custom stores
 
