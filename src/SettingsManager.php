@@ -28,7 +28,8 @@ class SettingsManager extends Manager
 
 	public function createDatabaseDriver()
 	{
-		$connection = $this->app['db']->connection();
+		$connectionName = $this->getConfig('anlutro/l4-settings::connection');
+		$connection = $this->app['db']->connection($connectionName);
 		$table = $this->getConfig('anlutro/l4-settings::table');
 
 		return new DatabaseSettingStore($connection, $table);
