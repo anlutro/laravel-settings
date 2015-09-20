@@ -3,10 +3,9 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSettingsTable extends Migration
-{
-    public function __construct()
-    {
+class CreateSettingsTable extends Migration {
+
+    public function __construct() {
         $this->tablename = config('settings.table');
     }
 
@@ -15,14 +14,12 @@ class CreateSettingsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create($this->tablename, function(Blueprint $table)
-		{
-		    $table->increments('id');
-		    $table->string('key')->index();
-		    $table->text('value');
-		});
+    public function up() {
+        Schema::connection(config('settings.connection'))->create($this->tablename, function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('key')->index();
+            $table->text('value');
+        });
     }
 
     /**
@@ -30,9 +27,8 @@ class CreateSettingsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::drop($this->tablename);
+    public function down() {
+        Schema::connection(config('settings.connection'))->drop($this->tablename);
     }
-}
 
+}

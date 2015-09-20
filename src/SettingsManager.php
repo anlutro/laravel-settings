@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Laravel 4 - Persistant Settings
  * 
@@ -11,45 +12,41 @@ namespace anlutro\LaravelSettings;
 
 use Illuminate\Support\Manager;
 use Illuminate\Foundation\Application;
+use DB;
 
-class SettingsManager extends Manager
-{
-	public function getDefaultDriver()
-	{
-		return $this->getConfig('anlutro/l4-settings::store');
-	}
+class SettingsManager extends Manager {
 
-	public function createJsonDriver()
-	{
-		$path = $this->getConfig('anlutro/l4-settings::path');
+    public function getDefaultDriver() {
+        return $this->getConfig('anlutro/l4-settings::store');
+    }
 
-		return new JsonSettingStore($this->app['files'], $path);
-	}
+    public function createJsonDriver() {
+        $path = $this->getConfig('anlutro/l4-settings::path');
 
-	public function createDatabaseDriver()
-	{
-		$connection = $this->app['db']->connection();
-		$table = $this->getConfig('anlutro/l4-settings::table');
+        return new JsonSettingStore($this->app['files'], $path);
+    }
 
-		return new DatabaseSettingStore($connection, $table);
-	}
+    public function createDatabaseDriver() {        
+        $connection = DB::connection($this->getConfig('anlutro/l4-settings::connection'));
+        $table = $this->getConfig('anlutro/l4-settings::table');
 
-	public function createMemoryDriver()
-	{
-		return new MemorySettingStore();
-	}
+        return new DatabaseSettingStore($connection, $table);
+    }
 
-	public function createArrayDriver()
-	{
-		return $this->createMemoryDriver();
-	}
+    public function createMemoryDriver() {
+        return new MemorySettingStore();
+    }
 
-	protected function getConfig($key)
-	{
-		if (version_compare(Application::VERSION, '5.0', '>=')) {
-			$key = str_replace('anlutro/l4-settings::', 'settings.', $key);
-		}
+    public function createArrayDriver() {
+        return $this->createMemoryDriver();
+    }
 
-		return $this->app['config']->get($key);
-	}
+    protected function getConfig($key) {
+        if (version_compare(Application::VERSION, '5.0', '>=')) {
+            $key = str_replace('anlutro/l4-settings::', 'settings.', $key);
+        }
+
+        return $this->app['config']->get($key);
+    }
+
 }
