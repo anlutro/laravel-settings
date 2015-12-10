@@ -60,6 +60,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			$this->publishes([
 				__DIR__.'/config/config.php' => config_path('settings.php')
 			], 'config');
+			$this->publishes([
+				__DIR__.'/migrations' => database_path('migrations')
+			], 'migrations');
 		} else {
 			$this->app['config']->package(
 				'anlutro/l4-settings', __DIR__ . '/config', 'anlutro/l4-settings'
