@@ -26,7 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function register()
 	{
 		// Bind the manager as a singleton on the container.
-		$this->app->bindShared('anlutro\LaravelSettings\SettingsManager', function($app) {
+		$this->app->singleton('anlutro\LaravelSettings\SettingsManager', function($app) {
 			// When the class has been resolved once, make sure that settings
 			// are saved when the application shuts down.
 			if (version_compare(Application::VERSION, '5.0', '<')) {
