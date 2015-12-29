@@ -25,7 +25,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	public function register()
 	{
-		$method = version_compare(Application::VERSION, '5.1', '>') ? 'singleton' : 'bindShared';
+		$method = version_compare(Application::VERSION, '5.2', '>=') ? 'singleton' : 'bindShared';
 
 		// Bind the manager as a singleton on the container.
 		$this->app->$method('anlutro\LaravelSettings\SettingsManager', function($app) {
