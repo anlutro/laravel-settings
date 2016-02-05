@@ -1,6 +1,6 @@
 {
     "name": "anlutro/l4-settings",
-    "description": "Persistant settings in Laravel.",
+    "description": "Persistent settings in Laravel.",
     "license": "MIT",
     "authors": [
         {

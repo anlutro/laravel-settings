@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Laravel 4 - Persistant Settings
+ * Laravel 4 - Persistent Settings
  * 
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT

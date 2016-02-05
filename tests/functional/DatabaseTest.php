@@ -14,7 +14,7 @@ class DatabaseTest extends AbstractFunctionalTest
 			'prefix'   => '',
 		));
 
-		$this->capsule->schema()->create('persistant_settings', function($t) {
+		$this->capsule->schema()->create('persistent_settings', function($t) {
 			$t->string('key', 64)->unique();
 			$t->string('value', 4096);
 		});
@@ -22,7 +22,7 @@ class DatabaseTest extends AbstractFunctionalTest
 
 	public function tearDown()
 	{
-		$this->capsule->schema()->drop('persistant_settings');
+		$this->capsule->schema()->drop('persistent_settings');
 		unset($this->capsule);
 		unset($this->container);
 	}

@@ -4,7 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/anlutro/l4-settings/v/stable.svg)](https://github.com/anlutro/laravel-settings/releases)
 [![License](https://poser.pugx.org/anlutro/l4-settings/license.svg)](http://opensource.org/licenses/MIT)
 
-Persistant, application-wide settings for Laravel.
+Persistent, application-wide settings for Laravel.
 
 Despite the package name, this package works with Laravel 5.x!
 
