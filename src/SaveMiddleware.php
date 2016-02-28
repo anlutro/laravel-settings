@@ -14,7 +14,14 @@ use Closure;
 use anlutro\LaravelSettings\SettingStore;
 use Illuminate\Contracts\Routing\TerminableMiddleware;
 
-class SaveMiddleware implements TerminableMiddleware
+// https://github.com/anlutro/laravel-settings/issues/43
+if (interface_exists('Illuminate\Contracts\Routing\TerminableMiddleware')) {
+	interface LaravelIsStupidMiddleware extends TerminableMiddleware {}
+} else {
+	interface LaravelIsStupidMiddleware {}
+}
+
+class SaveMiddleware implements LaravelIsStupidMiddleware
 {
 	/**
 	 * Create a new save settings middleware
