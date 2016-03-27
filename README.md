@@ -12,9 +12,10 @@ Despite the package name, this package works with Laravel 5.x!
 ## Installation
 
 1. `composer require anlutro/l4-settings`
-2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `config/app.php`.
-3. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5.x). The config file will give you control over which storage engine to use as well as some storage-specific settings.
-4. Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
+2. Add `anlutro\LaravelSettings\ServiceProvider` to the array of providers in `config/app.php` (Laravel 4.x).
+3. For Laravel 5.2 add `anlutro\LaravelSettings\ServiceProvider::class` to the array of providers in `config/app.php`. 
+4. Publish the config file by running `php artisan config:publish anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish` (Laravel 5.x). The config file will give you control over which storage engine to use as well as some storage-specific settings.
+5. Optional: add `'Setting' => 'anlutro\LaravelSettings\Facade'` to the array of aliases in `config/app.php`.
 
 ## Usage
 
