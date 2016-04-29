@@ -13,14 +13,24 @@ use Illuminate\Filesystem\Filesystem;
 
 class JsonSettingStore extends SettingStore
 {
+	/** @var int */
+	protected $serializeOptions;
+	
 	/**
 	 * @param \Illuminate\Filesystem\Filesystem $files
 	 * @param string                           $path
+	 * @param int                               $serializeOptions
 	 */
-	public function __construct(Filesystem $files, $path = null)
+	public function __construct(Filesystem $files, $path = null, $serializeOptions = 0)
 	{
 		$this->files = $files;
+		$this->serializeOptions = $serializeOptions;
 		$this->setPath($path ?: storage_path() . '/settings.json');
+	}
+
+	public function enablePrettyPrint()
+	{
+		$this->enableSerializingFlag(JSON_PRETTY_PRINT);
 	}
 
 	/**
@@ -67,11 +77,21 @@ class JsonSettingStore extends SettingStore
 	protected function write(array $data)
 	{
 		if ($data) {
-			$contents = json_encode($data);
+			$contents = json_encode($data, $this->serializeOptions);
 		} else {
 			$contents = '{}';
 		}
 
 		$this->files->put($this->path, $contents);
+	}
+	
+	/**
+	 * @param int $flag
+	 */
+	protected function enableSerializingFlag($flag)
+	{
+		if ($this->serializeOptions ~ $flag) {
+			$this->serializeOptions &= $flag;
+		}
 	}
 }
