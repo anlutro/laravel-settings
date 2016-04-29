@@ -90,8 +90,8 @@ class JsonSettingStore extends SettingStore
 	 */
 	protected function enableSerializingFlag($flag)
 	{
-		if ($this->serializeOptions ~ $flag) {
-			$this->serializeOptions &= $flag;
+		if ($this->serializeOptions & $flag) {
+			$this->serializeOptions |= $flag;
 		}
 	}
 }
