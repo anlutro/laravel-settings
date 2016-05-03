@@ -1,7 +1,7 @@
 <?php
 /**
  * Laravel 4 - Persistent Settings
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  l4-settings
@@ -15,7 +15,7 @@ class JsonSettingStore extends SettingStore
 {
 	/** @var int */
 	protected $serializeOptions;
-	
+
 	/**
 	 * @param \Illuminate\Filesystem\Filesystem $files
 	 * @param string                           $path
@@ -84,13 +84,13 @@ class JsonSettingStore extends SettingStore
 
 		$this->files->put($this->path, $contents);
 	}
-	
+
 	/**
 	 * @param int $flag
 	 */
 	protected function enableSerializingFlag($flag)
 	{
-		if ($this->serializeOptions & $flag) {
+		if ($this->serializeOptions ^ $flag) {
 			$this->serializeOptions |= $flag;
 		}
 	}

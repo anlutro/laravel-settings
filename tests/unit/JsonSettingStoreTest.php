@@ -14,9 +14,9 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 		return m::mock('Illuminate\Filesystem\Filesystem');
 	}
 
-	protected function makeStore($files, $path = 'fakepath')
+	protected function makeStore($files, $path = 'fakepath', $options = 0)
 	{
-		return new anlutro\LaravelSettings\JsonSettingStore($files, $path);
+		return new anlutro\LaravelSettings\JsonSettingStore($files, $path, $options);
 	}
 
 	/**
@@ -57,4 +57,47 @@ class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
 		$store = $this->makeStore($files);
 		$store->get('foo');
 	}
+
+    /**
+     * @test
+     */
+    public function allows_construction_with_json_options()
+    {
+      $data = ['abc' => 123];
+
+  		$files = $this->mockFilesystem();
+  		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+  		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
+  		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('{}');
+  		$files->shouldReceive('put')->once()->with('fakepath', json_encode(compact('data'), JSON_PRETTY_PRINT));
+
+      $store = $this->makeStore($files, 'fakepath', JSON_PRETTY_PRINT);
+    	$store->set('data', $data);
+      $store->save();
+    }
+
+    /**
+     * @test
+     */
+    public function can_enable_json_options()
+    {
+      $data = ['abc' => 123];
+
+  		$files = $this->mockFilesystem();
+  		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+  		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
+  		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('{}');
+  		$files->shouldReceive('put')->once()->with('fakepath', json_encode(compact('data')));
+
+      $store = $this->makeStore($files, 'fakepath');
+    	$store->set('data', $data);
+      $store->save();
+
+  		$files->shouldReceive('put')->once()->with('fakepath', json_encode(compact('data'), JSON_PRETTY_PRINT));
+      $store->enablePrettyPrint();
+
+    	$store->set('data', $data);
+      $store->save();
+
+    }
 }
