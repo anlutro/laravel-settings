@@ -115,7 +115,7 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$keysQuery = $this->newQuery();
 
-		if (method_exists($query, 'lists')) {
+		if (method_exists($keysQuery, 'lists')) {
 			$keys = $keysQuery->lists('key');
 		} else {
 			$keys = $keysQuery->pluck('key')->all();
