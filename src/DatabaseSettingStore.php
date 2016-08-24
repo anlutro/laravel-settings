@@ -61,11 +61,10 @@ class DatabaseSettingStore extends SettingStore
 		$this->table = $table;
 	}
 
-	/**
-	 * Set the query constraint.
-	 *
-	 * @param Closure $callback
-	 */
+    /**
+     * Set the query constraint.
+     * @param \Closure $callback
+     */
 	public function setConstraint(\Closure $callback)
 	{
 		$this->data = array();
@@ -115,7 +114,7 @@ class DatabaseSettingStore extends SettingStore
 	protected function write(array $data)
 	{
 		$keys = $this->newQuery()
-			->lists('key');
+			->pluck('key');
 
 		$insertData = array_dot($data);
 		$updateData = array();
@@ -149,7 +148,7 @@ class DatabaseSettingStore extends SettingStore
 	}
 
 	/**
-	 * Transforms settings data into an array ready to be insterted into the
+	 * Transforms settings data into an array ready to be inserted into the
 	 * database. Call array_dot on a multidimensional array before passing it
 	 * into this method!
 	 *
