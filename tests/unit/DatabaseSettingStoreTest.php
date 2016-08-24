@@ -18,7 +18,8 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('get')->once()->andReturn(array(
 			array('key' => 'nest.one', 'value' => 'old'),
 		));
-		$query->shouldReceive('lists')->once()->andReturn(array('nest.one'));
+		$query->shouldReceive('lists')->atMost(1)->andReturn(array('nest.one'));
+		$query->shouldReceive('pluck')->atMost(1)->andReturn(array('nest.one'));
 		$dbData = $this->getDbData();
 		unset($dbData[1]); // remove the nest.one array member
 		$query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
@@ -63,7 +64,8 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('where')->times(2)->with('extracol', '=', 'extradata')
 			->andReturn(m::self());
 		$query->shouldReceive('get')->once()->andReturn(array());
-		$query->shouldReceive('lists')->once()->andReturn(array());
+		$query->shouldReceive('lists')->atMost(1)->andReturn(array());
+		$query->shouldReceive('pluck')->atMost(1)->andReturn(array());
 		$query->shouldReceive('insert')->once()->with(array(
 			array('key' => 'foo', 'value' => 'bar', 'extracol' => 'extradata'),
 		));
