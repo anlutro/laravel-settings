@@ -113,8 +113,13 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	protected function write(array $data)
 	{
-		$keys = $this->newQuery()
-			->pluck('key')->all();
+		$keysQuery = $this->newQuery();
+
+		if (method_exists($query, 'lists')) {
+			$keys = $keysQuery->lists('key');
+		} else {
+			$keys = $keysQuery->pluck('key')->all();
+		}
 
 		$insertData = array_dot($data);
 		$updateData = array();
