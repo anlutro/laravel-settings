@@ -115,10 +115,10 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$keysQuery = $this->newQuery();
 
-		if (method_exists($keysQuery, 'lists')) {
-			$keys = $keysQuery->lists('key');
-		} else {
+		if (method_exists($keysQuery, 'pluck')) {
 			$keys = $keysQuery->pluck('key')->all();
+		} else {
+			$keys = $keysQuery->lists('key');
 		}
 
 		$insertData = array_dot($data);
