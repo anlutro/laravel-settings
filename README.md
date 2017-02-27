@@ -8,6 +8,9 @@ Persistent, application-wide settings for Laravel.
 
 Despite the package name, this package works with Laravel 5.x!
 
+## Common problems
+
+- Class not found errors: https://github.com/anlutro/laravel-settings/issues/38
 
 ## Installation
 
