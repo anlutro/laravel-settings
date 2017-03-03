@@ -28,6 +28,20 @@ class DatabaseSettingStore extends SettingStore
 	protected $table;
 
 	/**
+	 * The key column name to query from.
+	 *
+	 * @var string
+	 */
+	protected $keyColumn;
+
+	/**
+	 * The value column name to query from.
+	 *
+	 * @var string
+	 */
+	protected $valueColumn;
+
+	/**
 	 * Any query constraints that should be applied.
 	 *
 	 * @var Closure|null
@@ -45,12 +59,12 @@ class DatabaseSettingStore extends SettingStore
 	 * @param \Illuminate\Database\Connection $connection
 	 * @param string                         $table
 	 */
-	public function __construct(Connection $connection, $table = null, $key_column = null, $value_column = null)
+	public function __construct(Connection $connection, $table = null, $keyColumn = null, $valueColumn = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
-		$this->key_column = $key_column ?: 'key';
-        $this->value_column = $value_column ?: 'value';
+		$this->keyColumn = $keyColumn ?: 'key';
+		$this->valueColumn = $valueColumn ?: 'value';
 	}
 
 	/**
@@ -64,24 +78,24 @@ class DatabaseSettingStore extends SettingStore
 	}
 
 	/**
-     * Set the key column name to query from.
-     *
-     * @param string $key_column
-     */
-    public function setKeyColumn($key_column)
-    {
-        $this->key_column = $key_column;
-    }
+	 * Set the key column name to query from.
+	 *
+	 * @param string $key_column
+	 */
+	public function setKeyColumn($keyColumn)
+	{
+		$this->keyColumn = $keyColumn;
+	}
 
-    /**
-     * Set the value column name to query from.
-     *
-     * @param string $value_column
-     */
-    public function setValueColumn($value_column)
-    {
-        $this->value_column = $value_column;
-    }
+	/**
+	 * Set the value column name to query from.
+	 *
+	 * @param string $value_column
+	 */
+	public function setValueColumn($valueColumn)
+	{
+		$this->valueColumn = $valueColumn;
+	}
 
 	/**
 	 * Set the query constraint.
@@ -141,7 +155,7 @@ class DatabaseSettingStore extends SettingStore
 		// "lists" was removed in Laravel 5.3, at which point
 		// "pluck" should provide the same functionality.
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
-		$keys = $keysQuery->$method('key');
+		$keys = $keysQuery->$method($this->keyColumn);
 
 		$insertData = array_dot($data);
 		$updateData = array();
@@ -158,8 +172,8 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($updateData as $key => $value) {
 			$this->newQuery()
-				->where($this->key_column, '=', $key)
-				->update(array($this->value_column => $value));
+				->where($this->keyColumn, '=', $key)
+				->update(array($this->valueColumn => $value));
 		}
 
 		if ($insertData) {
@@ -169,7 +183,7 @@ class DatabaseSettingStore extends SettingStore
 
 		if ($deleteKeys) {
 			$this->newQuery()
-				->whereIn($this->key_column, $deleteKeys)
+				->whereIn($this->keyColumn, $deleteKeys)
 				->delete();
 		}
 	}
@@ -191,12 +205,12 @@ class DatabaseSettingStore extends SettingStore
 			foreach ($data as $key => $value) {
 				$dbData[] = array_merge(
 					$this->extraColumns,
-					array($this->key_column => $key, $this->value_column => $value)
+					array($this->keyColumn => $key, $this->valueColumn => $value)
 				);
 			}
 		} else {
 			foreach ($data as $key => $value) {
-				$dbData[] = array($this->key_column => $key, $this->value_column => $value);
+				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
 			}
 		}
 
@@ -224,11 +238,11 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($data as $row) {
 			if (is_array($row)) {
-				$key = $row[$this->key_column];
-				$value = $row[$this->value_column];
+				$key = $row[$this->keyColumn];
+				$value = $row[$this->valueColumn];
 			} elseif (is_object($row)) {
-				$key = $row->{$this->key_column};
-				$value = $row->{$this->value_column};
+				$key = $row->{$this->keyColumn};
+				$value = $row->{$this->valueColumn};
 			} else {
 				$msg = 'Expected array or object, got '.gettype($row);
 				throw new \UnexpectedValueException($msg);
