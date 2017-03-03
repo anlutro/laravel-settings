@@ -45,10 +45,12 @@ class DatabaseSettingStore extends SettingStore
 	 * @param \Illuminate\Database\Connection $connection
 	 * @param string                         $table
 	 */
-	public function __construct(Connection $connection, $table = null)
+	public function __construct(Connection $connection, $table = null, $key_column = null, $value_column = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
+		$this->key_column = $key_column ?: 'key';
+        $this->value_column = $value_column ?: 'value';
 	}
 
 	/**
@@ -60,6 +62,26 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$this->table = $table;
 	}
+
+	/**
+     * Set the key column name to query from.
+     *
+     * @param string $key_column
+     */
+    public function setKeyColumn($key_column)
+    {
+        $this->key_column = $key_column;
+    }
+
+    /**
+     * Set the value column name to query from.
+     *
+     * @param string $value_column
+     */
+    public function setValueColumn($value_column)
+    {
+        $this->value_column = $value_column;
+    }
 
 	/**
 	 * Set the query constraint.
@@ -136,8 +158,8 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($updateData as $key => $value) {
 			$this->newQuery()
-				->where('key', '=', $key)
-				->update(array('value' => $value));
+				->where($this->key_column, '=', $key)
+				->update(array($this->value_column => $value));
 		}
 
 		if ($insertData) {
@@ -147,7 +169,7 @@ class DatabaseSettingStore extends SettingStore
 
 		if ($deleteKeys) {
 			$this->newQuery()
-				->whereIn('key', $deleteKeys)
+				->whereIn($this->key_column, $deleteKeys)
 				->delete();
 		}
 	}
@@ -169,12 +191,12 @@ class DatabaseSettingStore extends SettingStore
 			foreach ($data as $key => $value) {
 				$dbData[] = array_merge(
 					$this->extraColumns,
-					array('key' => $key, 'value' => $value)
+					array($this->key_column => $key, $this->value_column => $value)
 				);
 			}
 		} else {
 			foreach ($data as $key => $value) {
-				$dbData[] = array('key' => $key, 'value' => $value);
+				$dbData[] = array($this->key_column => $key, $this->value_column => $value);
 			}
 		}
 
@@ -202,11 +224,11 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($data as $row) {
 			if (is_array($row)) {
-				$key = $row['key'];
-				$value = $row['value'];
+				$key = $row[$this->key_column];
+				$value = $row[$this->value_column];
 			} elseif (is_object($row)) {
-				$key = $row->key;
-				$value = $row->value;
+				$key = $row->{$this->key_column};
+				$value = $row->{$this->value_column};
 			} else {
 				$msg = 'Expected array or object, got '.gettype($row);
 				throw new \UnexpectedValueException($msg);

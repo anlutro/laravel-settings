@@ -30,9 +30,10 @@ class SettingsManager extends Manager
 	{
 		$connectionName = $this->getConfig('anlutro/l4-settings::connection');
 		$connection = $this->app['db']->connection($connectionName);
-		$table = $this->getConfig('anlutro/l4-settings::table');
+		$key_column = $this->getConfig('anlutro/l4-settings::key_column_name');
+        $value_column = $this->getConfig('anlutro/l4-settings::value_column_name');
 
-		return new DatabaseSettingStore($connection, $table);
+		return new DatabaseSettingStore($connection, $table, $key_column, $value_column);
 	}
 
 	public function createMemoryDriver()
