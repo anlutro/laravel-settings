@@ -11,8 +11,12 @@ class CreateSettingsTable extends Migration
 	{
 		if (version_compare(Application::VERSION, '5.0', '>=')) {
 			$this->tablename = Config::get('settings.table');
+			$this->key_column_name = Config::get('settings.key_column_name');
+            $this->value_column_name = Config::get('settings.value_column_name');
 		} else {
 			$this->tablename = Config::get('anlutro/l4-settings::table');
+			$this->key_column_name = Config::get('anlutro/l4-settings::key_column_name');
+            $this->value_column_name = Config::get('anlutro/l4-settings::value_column_name');
 		}
 	}
 
@@ -26,8 +30,8 @@ class CreateSettingsTable extends Migration
 		Schema::create($this->tablename, function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('key')->index();
-			$table->text('value');
+			$table->string($this->key_column_name)->index();
+			$table->text($this->value_column_name);
 		});
 	}
 
