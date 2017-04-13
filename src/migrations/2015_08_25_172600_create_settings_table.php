@@ -32,6 +32,7 @@ class CreateSettingsTable extends Migration
 			$table->increments('id');
 			$table->string($this->keyColumn)->index();
 			$table->text($this->valueColumn);
+			$table->integer('user_id')->nullable()->unsigned();
 		});
 	}
 
