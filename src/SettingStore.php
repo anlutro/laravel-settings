@@ -106,6 +106,15 @@ abstract class SettingStore
 		$this->data = array();
 	}
 
+    /**
+     * Load the settings data.
+     */
+    public function load()
+    {
+        $this->data = $this->read();
+        $this->loaded = true;
+    }
+
 	/**
 	 * Get all settings data.
 	 *
@@ -141,8 +150,7 @@ abstract class SettingStore
 	protected function checkLoaded()
 	{
 		if (!$this->loaded) {
-			$this->data = $this->read();
-			$this->loaded = true;
+			$this->load();
 		}
 	}
 
