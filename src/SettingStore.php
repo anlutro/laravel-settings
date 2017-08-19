@@ -42,7 +42,7 @@ abstract class SettingStore
 	 */
 	public function get($key, $default = null)
 	{
-		$this->checkLoaded();
+		$this->load();
 
 		return ArrayUtil::get($this->data, $key, $default);
 	}
@@ -56,7 +56,7 @@ abstract class SettingStore
 	 */
 	public function has($key)
 	{
-		$this->checkLoaded();
+		$this->load();
 
 		return ArrayUtil::has($this->data, $key);
 	}
@@ -69,7 +69,7 @@ abstract class SettingStore
 	 */
 	public function set($key, $value = null)
 	{
-		$this->checkLoaded();
+		$this->load();
 		$this->unsaved = true;
 		
 		if (is_array($key)) {
@@ -113,7 +113,7 @@ abstract class SettingStore
 	 */
 	public function all()
 	{
-		$this->checkLoaded();
+		$this->load();
 
 		return $this->data;
 	}
@@ -136,11 +136,13 @@ abstract class SettingStore
 	}
 
 	/**
-	 * Check if the settings data has been loaded.
+	 * Make sure data is loaded.
+	 *
+	 * @param $force Force a reload of data. Default false.
 	 */
-	protected function checkLoaded()
+	public function load($foce = false)
 	{
-		if (!$this->loaded) {
+		if (!$this->loaded || $force) {
 			$this->data = $this->read();
 			$this->loaded = true;
 		}
