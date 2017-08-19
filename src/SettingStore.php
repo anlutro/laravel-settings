@@ -140,7 +140,7 @@ abstract class SettingStore
 	 *
 	 * @param $force Force a reload of data. Default false.
 	 */
-	public function load($foce = false)
+	public function load($force = false)
 	{
 		if (!$this->loaded || $force) {
 			$this->data = $this->read();
