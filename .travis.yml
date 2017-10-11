@@ -13,13 +13,18 @@ php:
   - 7.1
   - 7.2
 
+matrix:
+  allow_failures:
+    - php: 7.2
+      env: COMPOSER_ARGS="--prefer-lowest"
+
 env:
   matrix:
     - COMPOSER_ARGS=""
     - COMPOSER_ARGS="--prefer-lowest"
 
 install:
-  - composer update ${COMPOSER_ARGS} --dev --no-interaction
+  - composer update ${COMPOSER_ARGS} --no-interaction
 
 script:
   - vendor/bin/phpunit --verbose
