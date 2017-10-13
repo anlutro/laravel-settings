@@ -14,6 +14,16 @@ use Illuminate\Database\Connection;
 class DatabaseSettingStore extends SettingStore
 {
 	/**
+	 * Created at attribute value in the table
+	 */
+	const CREATED_AT = 'created_at';
+
+	/**
+	 * Updated at attribute value in the table
+	 */
+	const UPDATED_AT = 'updated_at';
+
+	/**
 	 * The database connection instance.
 	 *
 	 * @var \Illuminate\Database\Connection
@@ -47,6 +57,13 @@ class DatabaseSettingStore extends SettingStore
 	 * @var Closure|null
 	 */
 	protected $queryConstraint;
+
+	/**
+	 * Any columns that should be used to filter.
+	 *
+	 * @var array
+	 */
+	protected $filterColumns = array();
 
 	/**
 	 * Any extra columns that should be added to the rows.
@@ -107,6 +124,16 @@ class DatabaseSettingStore extends SettingStore
 		$this->data = array();
 		$this->loaded = false;
 		$this->queryConstraint = $callback;
+	}
+
+	/**
+	 * Set columns to be used to filter
+	 *
+	 * @param array $columns
+	 */
+	public function setFilterColumns(array $columns)
+	{
+		$this->filterColumns = $columns;
 	}
 
 	/**
@@ -171,9 +198,13 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		foreach ($updateData as $key => $value) {
+			$updateAttributes = array(
+				$this->valueColumn => $value,
+				self::UPDATED_AT   => time());
+			$updateAttributes = array_merge($updateAttributes, $this->extraColumns);
 			$this->newQuery()
 				->where($this->keyColumn, '=', $key)
-				->update(array($this->valueColumn => $value));
+				->update($updateAttributes);
 		}
 
 		if ($insertData) {
@@ -205,12 +236,19 @@ class DatabaseSettingStore extends SettingStore
 			foreach ($data as $key => $value) {
 				$dbData[] = array_merge(
 					$this->extraColumns,
-					array($this->keyColumn => $key, $this->valueColumn => $value)
+					array($this->keyColumn => $key,
+						  $this->valueColumn => $value,
+						  self::CREATED_AT => time(),
+						  self::UPDATED_AT => time())
 				);
 			}
 		} else {
 			foreach ($data as $key => $value) {
-				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
+				$dbData[] = array(
+					$this->keyColumn => $key,
+					$this->valueColumn => $value,
+					self::CREATED_AT => time(),
+					self::UPDATED_AT => time());
 			}
 		}
 
@@ -266,7 +304,7 @@ class DatabaseSettingStore extends SettingStore
 		$query = $this->connection->table($this->table);
 
 		if (!$insert) {
-			foreach ($this->extraColumns as $key => $value) {
+			foreach ($this->filterColumns as $key => $value) {
 				$query->where($key, '=', $value);
 			}
 		}

@@ -32,6 +32,8 @@ class CreateSettingsTable extends Migration
 			$table->increments('id');
 			$table->string($this->keyColumn)->index();
 			$table->text($this->valueColumn);
+			$table->integer('created_at');
+			$table->integer('updated_at');
 		});
 	}
 
