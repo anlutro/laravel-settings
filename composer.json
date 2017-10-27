@@ -27,6 +27,16 @@
             "anlutro\\LaravelSettings\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "aliases": {
+                "Setting": "anlutro\\LaravelSettings\\Facade"
+            },
+            "providers": [
+                "anlutro\\LaravelSettings\\ServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
