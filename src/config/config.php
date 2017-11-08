@@ -1,45 +1,22 @@
 <?php
-
-return [
-	/*
-	|--------------------------------------------------------------------------
-	| Default Settings Store
-	|--------------------------------------------------------------------------
-	|
-	| This option controls the default settings store that gets used while
-	| using this settings library.
-	|
-	| Supported: "json", "database"
-	|
-	*/
+return array(
+	// which type of store to use.
+	// valid options: 'json', 'database'
 	'store' => 'json',
 
-	/*
-	|--------------------------------------------------------------------------
-	| JSON Store
-	|--------------------------------------------------------------------------
-	|
-	| If the store is set to "json", settings are stored in the defined
-	| file path in JSON format. Use full path to file.
-	|
-	*/
+	// if the json store is used, give the full path to the .json file
+	// that the store writes to.
 	'path' => storage_path().'/settings.json',
 
-	/*
-	|--------------------------------------------------------------------------
-	| Database Store
-	|--------------------------------------------------------------------------
-	|
-	| The settings are stored in the defined file path in JSON format.
-	| Use full path to JSON file.
-	|
-	*/
-	// If set to null, the default connection will be used.
-	'connection' => null,
-	// Name of the table used.
+	// if the database store is used, set the name of the table used..
 	'table' => 'settings',
+
+	// If the database store is used, you can set which connection to use. if
+	// set to null, the default connection will be used.
+	'connection' => null,
+
 	// If you want to use custom column names in database store you could 
 	// set them in this configuration
 	'keyColumn' => 'key',
 	'valueColumn' => 'value'
-];
+);
