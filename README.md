@@ -40,6 +40,18 @@ $settings = Setting::all();
 
 Call `Setting::save()` explicitly to save changes made.
 
+In addition, you can also use get a flattened array using `Setting::getRawData()`. Then in your view file, you can do something like the following:
+
+```
+@foreach($settings as $key => $value)
+    <div class='form-group'>
+        {{ Form::label($key, ucwords(str_replace(".", " ", $key)), ['class' => 'col-sm-2 control-label']) }}
+        <div class="col-sm-10">
+            {{ Form::textarea($key, $value, ['class'=>'form-control', 'autofocus' => '']) }}
+        </div>
+    </div>
+@endforeach
+```
 
 ### Auto-saving
 
