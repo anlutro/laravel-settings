@@ -1,7 +1,7 @@
 <?php
 /**
  * Laravel 4 - Persistent Settings
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  l4-settings
@@ -36,7 +36,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 					$app->make('anlutro\LaravelSettings\SettingStore')->save();
 				});
 			}
-			
+
 			/**
 			 * Construct the actual manager.
 			 */
@@ -58,23 +58,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	public function boot()
 	{
-		if (version_compare(Application::VERSION, '5.3', '>=')) {
-			$this->loadMigrationsFrom(__DIR__.'/migrations');
+		$this->publishes([
+				__DIR__.'/config/config.php' => config_path('settings.php'),
+		], 'config');
+
+		$this->mergeConfigFrom(__DIR__.'/config/config.php', 'settings');
+
+		if (! class_exists('CreateSettingsTable')) {
+			$timestamp = date('Y_m_d_His', time());
+
 			$this->publishes([
-				__DIR__.'/config/config.php' => config_path('settings.php')
-			], 'config');
-		} else if (version_compare(Application::VERSION, '5.0', '>=')) {
-			$this->publishes([
-				__DIR__.'/config/config.php' => config_path('settings.php')
-			], 'config');
-			$this->publishes([
-				__DIR__.'/migrations' => database_path('migrations')
+				__DIR__.'/migrations/create_settings_table.php.stub' => database_path("/migrations/{$timestamp}_create_settings_table.php"),
 			], 'migrations');
-		} else {
-			$this->app['config']->package(
-				'anlutro/l4-settings', __DIR__ . '/config', 'anlutro/l4-settings'
-			);
 		}
+
 	}
 
 	/**
