@@ -12,7 +12,7 @@ return [
 	| Supported: "json", "database"
 	|
 	*/
-	'store' => 'json',
+	'store' => env('SETTINGS_STORE', 'json'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ return [
 	| file path in JSON format. Use full path to file.
 	|
 	*/
-	'path' => storage_path().'/settings.json',
+	'path' => storage_path().env('SETTINGS_PATH', '/settings.json'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -35,11 +35,11 @@ return [
 	|
 	*/
 	// If set to null, the default connection will be used.
-	'connection' => null,
+	'connection' => env('SETTINGS_CONNECTION', null),
 	// Name of the table used.
-	'table' => 'settings',
-	// If you want to use custom column names in database store you could 
+	'table' => env('SETTINGS_TABLE', 'settings'),
+	// If you want to use custom column names in database store you could
 	// set them in this configuration
-	'keyColumn' => 'key',
-	'valueColumn' => 'value'
+	'keyColumn' => env('SETTINGS_KEY_COLUMN', 'key'),
+	'valueColumn' => env('SETTINGS_VALUE_COLUMN', 'value')
 ];
