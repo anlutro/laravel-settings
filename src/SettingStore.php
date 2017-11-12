@@ -50,7 +50,7 @@ abstract class SettingStore
 	/**
 	 * Get a flattened array from the settings data.
 	 *
-	 * @param  array 				$array Optional array of settings values, with a fallback to all settings.
+	 * @param  array        $array Optional array of settings values, with a fallback to all settings.
 	 * @param  string       $prefix Optional prefix.
 	 *
 	 * @return array
