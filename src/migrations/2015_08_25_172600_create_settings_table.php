@@ -18,6 +18,9 @@ class CreateSettingsTable extends Migration
 			$this->keyColumn = Config::get('anlutro/l4-settings::keyColumn');
 			$this->valueColumn = Config::get('anlutro/l4-settings::valueColumn');
 		}
+
+		$this->createdAtColumn = 'created_at';
+		$this->updatedAtColumn = 'updated_at';
 	}
 
 	/**
@@ -32,6 +35,8 @@ class CreateSettingsTable extends Migration
 			$table->increments('id');
 			$table->string($this->keyColumn)->index();
 			$table->text($this->valueColumn);
+			$table->integer($this->createdAtColumn);
+			$table->integer($this->updatedAtColumn);
 		});
 	}
 

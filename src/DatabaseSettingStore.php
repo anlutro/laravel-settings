@@ -65,6 +65,8 @@ class DatabaseSettingStore extends SettingStore
 		$this->table = $table ?: 'persistant_settings';
 		$this->keyColumn = $keyColumn ?: 'key';
 		$this->valueColumn = $valueColumn ?: 'value';
+		$this->createdAtColumn = 'created_at';
+		$this->updatedAtColumn = 'updated_at';
 	}
 
 	/**
@@ -120,6 +122,16 @@ class DatabaseSettingStore extends SettingStore
 	}
 
 	/**
+         * Returns fresh time
+	 *
+	 * @return integer
+	 */
+	public function freshTimestamp()
+	{
+		return time();
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function forget($key)
@@ -171,9 +183,12 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		foreach ($updateData as $key => $value) {
+			$updatedAtValue = $this->freshTimestamp();
 			$this->newQuery()
 				->where($this->keyColumn, '=', $key)
-				->update(array($this->valueColumn => $value));
+				->update(array(
+					$this->valueColumn => $value,
+					$this->updatedAtColumn => $updatedAtValue));
 		}
 
 		if ($insertData) {
@@ -201,17 +216,18 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$dbData = array();
 
-		if ($this->extraColumns) {
-			foreach ($data as $key => $value) {
-				$dbData[] = array_merge(
-					$this->extraColumns,
-					array($this->keyColumn => $key, $this->valueColumn => $value)
-				);
-			}
-		} else {
-			foreach ($data as $key => $value) {
-				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
-			}
+		$freshTimestamp = $this->freshTimestamp();
+		$timestamps = array(
+			$this->createdAtColumn => $freshTimestamp,
+			$this->updatedAtColumn => $freshTimestamp);
+
+		foreach ($data as $key => $value) {
+			$dbData[] = array_merge(
+				$this->extraColumns,
+				array(
+					$this->keyColumn => $key,
+					$this->valueColumn => $value),
+				$timestamps);
 		}
 
 		return $dbData;
