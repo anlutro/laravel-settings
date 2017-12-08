@@ -65,8 +65,8 @@ class DatabaseSettingStore extends SettingStore
 		$this->table = $table ?: 'persistant_settings';
 		$this->keyColumn = $keyColumn ?: 'key';
 		$this->valueColumn = $valueColumn ?: 'value';
-		$this->createdAtColumn = 'created_at';
-		$this->updatedAtColumn = 'updated_at';
+		$this->createdAtColumn = $createdAtColumn ?: 'created_at';
+		$this->updatedAtColumn = $updatedAtColumn ?: 'updated_at';
 	}
 
 	/**
