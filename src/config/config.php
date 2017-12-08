@@ -14,4 +14,9 @@ return array(
 	// If the database store is used, you can set which connection to use. if
 	// set to null, the default connection will be used.
 	'connection' => null,
+
+	// If you want to use custom column names in database store you could 
+	// set them in this configuration
+	'keyColumn' => 'key',
+	'valueColumn' => 'value'
 );

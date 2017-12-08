@@ -28,6 +28,20 @@ class DatabaseSettingStore extends SettingStore
 	protected $table;
 
 	/**
+	 * The key column name to query from.
+	 *
+	 * @var string
+	 */
+	protected $keyColumn;
+
+	/**
+	 * The value column name to query from.
+	 *
+	 * @var string
+	 */
+	protected $valueColumn;
+
+	/**
 	 * Any query constraints that should be applied.
 	 *
 	 * @var Closure|null
@@ -45,10 +59,14 @@ class DatabaseSettingStore extends SettingStore
 	 * @param \Illuminate\Database\Connection $connection
 	 * @param string                         $table
 	 */
-	public function __construct(Connection $connection, $table = null)
+	public function __construct(Connection $connection, $table = null, $keyColumn = null, $valueColumn = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
+		$this->keyColumn = $keyColumn ?: 'key';
+		$this->valueColumn = $valueColumn ?: 'value';
+		$this->createdAtColumn = 'created_at';
+		$this->updatedAtColumn = 'updated_at';
 	}
 
 	/**
@@ -59,6 +77,26 @@ class DatabaseSettingStore extends SettingStore
 	public function setTable($table)
 	{
 		$this->table = $table;
+	}
+
+	/**
+	 * Set the key column name to query from.
+	 *
+	 * @param string $key_column
+	 */
+	public function setKeyColumn($keyColumn)
+	{
+		$this->keyColumn = $keyColumn;
+	}
+
+	/**
+	 * Set the value column name to query from.
+	 *
+	 * @param string $value_column
+	 */
+	public function setValueColumn($valueColumn)
+	{
+		$this->valueColumn = $valueColumn;
 	}
 
 	/**
@@ -81,6 +119,16 @@ class DatabaseSettingStore extends SettingStore
 	public function setExtraColumns(array $columns)
 	{
 		$this->extraColumns = $columns;
+	}
+
+	/**
+         * Returns fresh time
+	 *
+	 * @return integer
+	 */
+	public function freshTimestamp()
+	{
+		return time();
 	}
 
 	/**
@@ -119,7 +167,7 @@ class DatabaseSettingStore extends SettingStore
 		// "lists" was removed in Laravel 5.3, at which point
 		// "pluck" should provide the same functionality.
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
-		$keys = $keysQuery->$method('key');
+		$keys = $keysQuery->$method($this->keyColumn);
 
 		$insertData = array_dot($data);
 		$updateData = array();
@@ -135,9 +183,12 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		foreach ($updateData as $key => $value) {
+			$updatedAtValue = $this->freshTimestamp();
 			$this->newQuery()
-				->where('key', '=', $key)
-				->update(array('value' => $value));
+				->where($this->keyColumn, '=', $key)
+				->update(array(
+					$this->valueColumn => $value,
+					$this->updatedAtColumn => $updatedAtValue));
 		}
 
 		if ($insertData) {
@@ -147,7 +198,7 @@ class DatabaseSettingStore extends SettingStore
 
 		if ($deleteKeys) {
 			$this->newQuery()
-				->whereIn('key', $deleteKeys)
+				->whereIn($this->keyColumn, $deleteKeys)
 				->delete();
 		}
 	}
@@ -165,17 +216,18 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$dbData = array();
 
-		if ($this->extraColumns) {
-			foreach ($data as $key => $value) {
-				$dbData[] = array_merge(
-					$this->extraColumns,
-					array('key' => $key, 'value' => $value)
-				);
-			}
-		} else {
-			foreach ($data as $key => $value) {
-				$dbData[] = array('key' => $key, 'value' => $value);
-			}
+		$freshTimestamp = $this->freshTimestamp();
+		$timestamps = array(
+			$this->createdAtColumn => $freshTimestamp,
+			$this->updatedAtColumn => $freshTimestamp);
+
+		foreach ($data as $key => $value) {
+			$dbData[] = array_merge(
+				$this->extraColumns,
+				array(
+					$this->keyColumn => $key,
+					$this->valueColumn => $value),
+				$timestamps);
 		}
 
 		return $dbData;
@@ -202,11 +254,11 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($data as $row) {
 			if (is_array($row)) {
-				$key = $row['key'];
-				$value = $row['value'];
+				$key = $row[$this->keyColumn];
+				$value = $row[$this->valueColumn];
 			} elseif (is_object($row)) {
-				$key = $row->key;
-				$value = $row->value;
+				$key = $row->{$this->keyColumn};
+				$value = $row->{$this->valueColumn};
 			} else {
 				$msg = 'Expected array or object, got '.gettype($row);
 				throw new \UnexpectedValueException($msg);
