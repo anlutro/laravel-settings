@@ -6,12 +6,17 @@ branches:
 language: php
 
 php: 
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7.0
-  - hhvm
+  - 7.1
+  - 7.2
+
+matrix:
+  allow_failures:
+    - php: 7.2
+      env: COMPOSER_ARGS="--prefer-lowest"
 
 env:
   matrix:
@@ -19,9 +24,9 @@ env:
     - COMPOSER_ARGS="--prefer-lowest"
 
 install:
-  - composer update ${COMPOSER_ARGS} --dev --no-interaction
+  - composer update ${COMPOSER_ARGS} --no-interaction
 
 script:
-  - phpunit --verbose
+  - vendor/bin/phpunit --verbose
 
 sudo: false
