@@ -57,7 +57,7 @@ You can modify the path used on run-time using `Setting::setPath($path)`.
 
 #### Using Migration File
 
-If you use the database store you need to run `php artisan migrate --package=anlutro/l4-settings` (Laravel 4.x) or `php artisan migrate --path=vendor/anlutro/l4-settings/src/migrations` (Laravel 5.x) to generate the table.
+If you use the database store you need to run `php artisan migrate --package=anlutro/l4-settings` (Laravel 4.x) or `php artisan vendor:publish --provider="anlutro/l4-settings" --tag="migrations" && php artisan migrate` (Laravel 5.x) to generate the table.
 
 #### Example
 
