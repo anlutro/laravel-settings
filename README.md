@@ -15,7 +15,7 @@ Despite the package name, this package works with Laravel 5.x!
 ## Installation - Laravel >= 5.5
 
 1. `composer require anlutro/l4-settings`
-2. Publish the config file by running `php artisan vendor:publish --provider="anlutro/l4-settings" --tag="config"`. The config file will give you control over which storage engine to use as well as some storage-specific settings.
+2. Publish the config file by running `php artisan vendor:publish --provider="anlutro\LaravelSettings\ServiceProvider" --tag="config"`. The config file will give you control over which storage engine to use as well as some storage-specific settings.
 
 ## Installation - Laravel < 5.5
 
