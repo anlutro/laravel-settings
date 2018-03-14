@@ -58,17 +58,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	public function boot()
 	{
-		if (version_compare(Application::VERSION, '5.3', '>=')) {
-			$this->loadMigrationsFrom(__DIR__.'/migrations');
-			$this->publishes([
-				__DIR__.'/config/config.php' => config_path('settings.php')
-			], 'config');
-		} else if (version_compare(Application::VERSION, '5.0', '>=')) {
+		if (version_compare(Application::VERSION, '5.0', '>=')) {
 			$this->publishes([
 				__DIR__.'/config/config.php' => config_path('settings.php')
 			], 'config');
 			$this->publishes([
-				__DIR__.'/migrations' => database_path('migrations')
+				__DIR__.'/migrations/2015_08_25_172600_create_settings_table.php' => database_path('migrations/'.date('Y_m_d_His').'_create_settings_table.php')
 			], 'migrations');
 		} else {
 			$this->app['config']->package(
