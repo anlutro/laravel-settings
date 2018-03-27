@@ -23,6 +23,9 @@
         "illuminate/filesystem": ">=4.1 <6.0"
     },
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
             "anlutro\\LaravelSettings\\": "src/"
         }
