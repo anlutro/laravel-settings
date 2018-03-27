@@ -13,7 +13,7 @@ class HelperTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function single_parameter_get_a_key_from_store() 
 	{
-		app()->shouldReceive('get')->with('foo', null);
+		app()->shouldReceive('get')->with('foo', null)->once();
 
 		setting('foo');
 	}
@@ -22,7 +22,7 @@ class HelperTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function two_parameters_set_to_store() 
 	{
-		app()->shouldReceive('set')->with('foo', 'bar');
+		app()->shouldReceive('set')->with('foo', 'bar')->once();
 
 		setting('foo', 'bar');
 	}
