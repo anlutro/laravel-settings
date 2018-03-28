@@ -5,13 +5,20 @@ use Illuminate\Container\Container;
 
 class HelperTest extends PHPUnit_Framework_TestCase
 {
+	public static $functions;
+
 	public function setUp()
 	{
-		parent::setUp();
+		self::$functions = m::mock();
+
+		if (version_compare(\Illuminate\Foundation\Application::VERSION, '5.0', '<')) {
+		    $this->markTestSkipped('Laravel 5 feature.');
+		    return;
+		}
 
 		$store = m::mock('anlutro\LaravelSettings\SettingStore');
 
-		Container::getInstance()->bind('setting', function() use ($store) {
+		app()->bind('setting', function() use ($store) {
 			return $store;
 		});
 	}
@@ -48,7 +55,12 @@ class HelperTest extends PHPUnit_Framework_TestCase
 }
 
 if (!function_exists('app')) {
-	function app($var) {
-		return Container::getInstance()->make($var);
-	}
+	function app($abstract = null, array $parameters = [])
+    {
+        if (is_null($abstract)) {
+            return Container::getInstance();
+        }
+
+        return Container::getInstance()->make($abstract, $parameters);
+    }
 }
