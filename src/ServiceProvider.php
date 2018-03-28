@@ -84,6 +84,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 		return array(
 			'anlutro\LaravelSettings\SettingsManager',
 			'anlutro\LaravelSettings\SettingStore',
+			'setting'
 		);
 	}
 }
