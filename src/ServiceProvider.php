@@ -48,6 +48,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			return $app->make('anlutro\LaravelSettings\SettingsManager')->driver();
 		});
 
+		$this->app->alias('anlutro\LaravelSettings\SettingStore', 'setting');
+
 		if (version_compare(Application::VERSION, '5.0', '>=')) {
 			$this->mergeConfigFrom(__DIR__ . '/config/config.php', 'settings');
 		}
