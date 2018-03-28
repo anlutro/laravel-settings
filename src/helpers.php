@@ -7,8 +7,8 @@ if (! function_exists('setting')) {
             return app('setting');
         }
 
-        if (!is_null($default)) {
-            return app('setting')->set($key, $default);
+        if (is_array($key)) {
+            return app('setting')->set($key);
         }
 
         return app('setting')->get($key, $default);
