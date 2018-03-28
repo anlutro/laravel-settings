@@ -16,6 +16,8 @@ class HelperTest extends PHPUnit_Framework_TestCase
 		    return;
 		}
 
+		Container::setInstance(new Container);
+
 		$store = m::mock('anlutro\LaravelSettings\SettingStore');
 
 		app()->bind('setting', function() use ($store) {
