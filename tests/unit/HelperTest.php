@@ -53,14 +53,3 @@ class HelperTest extends PHPUnit_Framework_TestCase
 		setting(['foo', 'bar']);
 	}
 }
-
-if (!function_exists('app')) {
-	function app($abstract = null, array $parameters = [])
-    {
-        if (is_null($abstract)) {
-            return Container::getInstance();
-        }
-
-        return Container::getInstance()->make($abstract, $parameters);
-    }
-}
