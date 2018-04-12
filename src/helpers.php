@@ -3,14 +3,14 @@
 if (! function_exists('setting')) {
     function setting($key = null, $default = null)
     {
-        if (is_null($key)) {
-            return app('setting');
-        }
+        $setting = app('setting');
 
         if (is_array($key)) {
-            return app('setting')->set($key);
+            $setting->set($key);
+        } elseif (! is_null($key)) {
+            return $setting->get($key, $default);
         }
 
-        return app('setting')->get($key, $default);
+        return $setting;
     }
 }
