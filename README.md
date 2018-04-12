@@ -30,9 +30,9 @@ You can either access the setting store via its facade or inject it by type-hint
 
 ```php
 <?php
-Setting::set('foo', 'bar'); // or setting(['foo' => 'bar']);
-Setting::get('foo', 'default value'); // or setting('foo', 'default value');
-Setting::get('nested.element'); // or setting('nested.element');
+Setting::set('foo', 'bar');
+Setting::get('foo', 'default value');
+Setting::get('nested.element');
 Setting::forget('foo');
 $settings = Setting::all();
 ?>
