@@ -40,6 +40,27 @@ $settings = Setting::all();
 
 Call `Setting::save()` explicitly to save changes made.
 
+You could also use the `setting()` helper:
+
+```php
+// Get the store instance
+setting();
+
+// Get values
+setting('foo');
+setting('foo.bar');
+setting('foo', 'default value');
+setting()->get('foo');
+
+// Set values
+setting(['foo' => 'bar']);
+setting(['foo.bar' => 'baz']);
+setting()->set('foo', 'bar');
+
+// Method chaining
+setting(['foo' => 'bar'])->save();
+```
+
 
 ### Auto-saving
 
