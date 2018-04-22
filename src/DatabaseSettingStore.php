@@ -1,7 +1,7 @@
 <?php
 /**
  * Laravel 4 - Persistent Settings
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  l4-settings
@@ -10,6 +10,8 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class DatabaseSettingStore extends SettingStore
 {
@@ -186,6 +188,8 @@ class DatabaseSettingStore extends SettingStore
 				->whereIn($this->keyColumn, $deleteKeys)
 				->delete();
 		}
+
+		Cache::forget('settings');
 	}
 
 	/**
@@ -222,7 +226,11 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	protected function read()
 	{
-		return $this->parseReadData($this->newQuery()->get());
+		$result = Cache::remember('settings', Config::get('cache.ttl', 60), function () {
+            return $this->newQuery()->get();
+        });
+
+        return $this->parseReadData($result);
 	}
 
 	/**
