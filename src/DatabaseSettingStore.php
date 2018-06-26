@@ -44,7 +44,7 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * Any query constraints that should be applied.
 	 *
-	 * @var callable|null
+	 * @var \Closure|null
 	 */
 	protected $queryConstraint;
 
@@ -100,7 +100,7 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * Set the query constraint.
 	 *
-	 * @param callable $callback
+	 * @param \Closure $callback
 	 */
 	public function setConstraint(\Closure $callback)
 	{
