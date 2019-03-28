@@ -29,7 +29,7 @@ class AddUniqueToKeyColumnInSettingsTable extends Migration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->dropIndex(Config::get('settings.table') . '_' . Config::get('settings.keyColumn') . '_index');
+            $table->dropIndex($this->tablename . '_' . $this->keyColumn . '_index');
             $table->unique($this->keyColumn, 'settings_key_unique');
         });
     }
@@ -43,8 +43,7 @@ class AddUniqueToKeyColumnInSettingsTable extends Migration
     {
         Schema::table($this->tablename, function (Blueprint $table) {
             $table->dropUnique('settings_key_unique');
-            $table->Index(Config::get('settings.keyColumn'));
+            $table->Index($this->keyColumn);
         });
     }
 }
-
