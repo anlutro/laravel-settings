@@ -13,7 +13,6 @@ use \Illuminate\Support\Facades\Config;
 
 abstract class SettingStore
 {
-    use Config;
 	/**
 	 * The settings data.
 	 *
