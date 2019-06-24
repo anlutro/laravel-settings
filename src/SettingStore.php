@@ -9,6 +9,8 @@
 
 namespace anlutro\LaravelSettings;
 
+use \Illuminate\Support\Facades\Config;
+
 abstract class SettingStore
 {
 	/**
@@ -42,6 +44,10 @@ abstract class SettingStore
 	 */
 	public function get($key, $default = null)
 	{
+        if ($default === NULL) {
+            $default = Config::get('settings.defaults.'.$key);
+        }
+        
 		$this->load();
 
 		return ArrayUtil::get($this->data, $key, $default);

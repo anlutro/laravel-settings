@@ -41,5 +41,19 @@ return [
 	// If you want to use custom column names in database store you could 
 	// set them in this configuration
 	'keyColumn' => 'key',
-	'valueColumn' => 'value'
+	'valueColumn' => 'value',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Default Settings
+    |--------------------------------------------------------------------------
+    |
+    | Define all default settings that will be used before any settings are set,
+    | this avoids all settings being set to false to begin with and avoids
+    | hardcoding the same defaults in all 'Settings::get()' calls
+    |
+    */
+    'defaults' => [
+        'foo' => 'bar',
+    ]
 ];
