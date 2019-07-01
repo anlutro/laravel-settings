@@ -44,9 +44,9 @@ abstract class SettingStore
 	 */
 	public function get($key, $default = null)
 	{
-        if ($default === NULL) {
-            $default = Config::get('settings.defaults.'.$key);
-        }
+		if ($default === NULL && !is_array($key)) {
+			$default = Config::get('settings.defaults.'.$key);
+		}
         
 		$this->load();
 
