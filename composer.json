@@ -10,7 +10,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": ">=4.1 <6.0"
+        "illuminate/support": ">=4.1 <7.0",
+        "laravel/helpers": ">=1.0.0"
     },
     "suggest": {
         "illuminate/filesystem": "Save settings to a JSON file.",
@@ -19,7 +20,7 @@
     "require-dev": {
         "phpunit/phpunit": ">=4.8, <6",
         "mockery/mockery": "0.9.*",
-        "laravel/framework": ">=4.1 <6.0"
+        "laravel/framework": ">=4.1"
     },
     "autoload": {
         "files": [
