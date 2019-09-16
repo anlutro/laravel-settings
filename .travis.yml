@@ -21,7 +21,7 @@ env:
   - COMPOSER_REQS="laravel/framework:5.1.*"
   - COMPOSER_REQS="laravel/framework:5.5.*"
   - COMPOSER_REQS="laravel/framework:>=5.7"
-  - COMPOSER_REQS="laravel/framework:>=6.*"
+  - COMPOSER_REQS="laravel/framework:>=6.0"
 
 matrix:
   exclude:
@@ -33,7 +33,7 @@ matrix:
       
   include: 
     - php: 7.2
-      env: COMPOSER_REQS="laravel/framework:>=6.*"
+      env: COMPOSER_REQS="laravel/framework:>=6.0"
 
 install:
   - composer require --no-update $COMPOSER_REQS
