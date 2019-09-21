@@ -37,6 +37,19 @@ class SettingsManager extends Manager
 		return new DatabaseSettingStore($connection, $table, $keyColumn, $valueColumn);
 	}
 
+    public function createDatabaseWithCacheDriver()
+    {
+        $connectionName = $this->getConfig('anlutro/l4-settings::connection');
+        $connection = $this->app['db']->connection($connectionName);
+        $table = $this->getConfig('anlutro/l4-settings::table');
+        $keyColumn = $this->getConfig('anlutro/l4-settings::keyColumn');
+        $valueColumn = $this->getConfig('anlutro/l4-settings::valueColumn');
+        $cacheManager = $this->app['cache'];
+        $cacheTtl= $this->getConfig('anlutro/l4-settings::cacheTtl');
+
+        return new DatabaseWithCacheSettingStore($connection, $table, $keyColumn, $valueColumn, $cacheManager, $cacheTtl);
+    }
+
 	public function createMemoryDriver()
 	{
 		return new MemorySettingStore();
