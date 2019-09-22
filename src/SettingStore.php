@@ -9,6 +9,7 @@
 
 namespace anlutro\LaravelSettings;
 
+use Illuminate\Support\Facades\Cache;
 use \Illuminate\Support\Facades\Config;
 
 abstract class SettingStore
@@ -149,9 +150,23 @@ abstract class SettingStore
 	public function load($force = false)
 	{
 		if (!$this->loaded || $force) {
-			$this->data = $this->read();
+			$this->data = $this->readData();
 			$this->loaded = true;
 		}
+	}
+
+	/**
+	 * Read data from a store or cache
+	 *
+	 * @return array
+	 */
+	private function readData() {
+		if (Config::get('settings.enableCache')) {
+			return Cache::remember('setting:cache', Config::get('settings.cacheTtl'), function () {
+				return $this->read();
+			});
+		}
+		return $this->read();
 	}
 
 	/**
