@@ -15,6 +15,11 @@ use \Illuminate\Support\Facades\Config;
 abstract class SettingStore
 {
 	/**
+	 * Cache key for save
+	 */
+	const CACHE_KEY = 'setting:cache';
+
+	/**
 	 * The settings data.
 	 *
 	 * @var array
@@ -138,6 +143,10 @@ abstract class SettingStore
 			return;
 		}
 
+		if (Config::get('settings.forgetCacheByWrite')) {
+			Cache::forget(static::CACHE_KEY);
+		}
+
 		$this->write($this->data);
 		$this->unsaved = false;
 	}
@@ -162,7 +171,7 @@ abstract class SettingStore
 	 */
 	private function readData() {
 		if (Config::get('settings.enableCache')) {
-			return Cache::remember('setting:cache', Config::get('settings.cacheTtl'), function () {
+			return Cache::remember(static::CACHE_KEY, Config::get('settings.cacheTtl'), function () {
 				return $this->read();
 			});
 		}
