@@ -1,11 +1,19 @@
 <?php
 
-use anlutro\LaravelSettings\JsonSettingStore;
 use anlutro\LaravelSettings\DatabaseSettingStore;
+use Illuminate\Support\Facades\Config;
 
 abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 {
 	protected abstract function createStore(array $data = array());
+
+	public function setUp()
+	{
+		Config::shouldReceive('get')
+			->with('settings.enableCache')
+			->andReturn(false)
+			->getMock();
+	}
 
 	protected function assertStoreEquals($store, $expected, $message = null)
 	{
