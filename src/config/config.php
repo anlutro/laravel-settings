@@ -42,7 +42,7 @@ return [
 	'enableCache' => false,
 	'forgetCacheByWrite' => true,
 	'cacheTtl' => 15,
-    // If you want to use custom column names in database store you could
+	// If you want to use custom column names in database store you could
 	// set them in this configuration
 	'keyColumn' => 'key',
 	'valueColumn' => 'value',
