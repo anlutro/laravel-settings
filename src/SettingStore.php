@@ -9,10 +9,16 @@
 
 namespace anlutro\LaravelSettings;
 
+use Illuminate\Support\Facades\Cache;
 use \Illuminate\Support\Facades\Config;
 
 abstract class SettingStore
 {
+	/**
+	 * Cache key for save
+	 */
+	const CACHE_KEY = 'setting:cache';
+
 	/**
 	 * The settings data.
 	 *
@@ -137,6 +143,10 @@ abstract class SettingStore
 			return;
 		}
 
+		if (Config::get('settings.forgetCacheByWrite')) {
+			Cache::forget(static::CACHE_KEY);
+		}
+
 		$this->write($this->data);
 		$this->unsaved = false;
 	}
@@ -149,9 +159,23 @@ abstract class SettingStore
 	public function load($force = false)
 	{
 		if (!$this->loaded || $force) {
-			$this->data = $this->read();
+			$this->data = $this->readData();
 			$this->loaded = true;
 		}
+	}
+
+	/**
+	 * Read data from a store or cache
+	 *
+	 * @return array
+	 */
+	private function readData() {
+		if (Config::get('settings.enableCache')) {
+			return Cache::remember(static::CACHE_KEY, Config::get('settings.cacheTtl'), function () {
+				return $this->read();
+			});
+		}
+		return $this->read();
 	}
 
 	/**

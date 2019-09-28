@@ -18,6 +18,7 @@ class DatabaseTest extends AbstractFunctionalTest
 			$t->string('key', 64)->unique();
 			$t->string('value', 4096);
 		});
+		parent::setUp();
 	}
 
 	public function tearDown()

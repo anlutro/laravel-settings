@@ -11,6 +11,7 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": ">=4.1 <7.0",
+        "illuminate/cache": ">=4.1 <7.0",
         "laravel/helpers": ">=1.0.0"
     },
     "suggest": {

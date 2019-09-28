@@ -69,6 +69,21 @@ In Laravel 4.x, the library makes sure to auto-save every time the application s
 In Laravel 5.x, if you add the middleware `anlutro\LaravelSettings\SaveMiddleware` to your `middleware` list in `app\Http\Kernel.php`, settings will be saved automatically at the end of all HTTP requests, but you'll still need to call `Setting::save()` explicitly in console commands, queue workers etc.
 
 
+### Store cache
+
+When reading from the store, you can enable the cache.
+
+You can also configure flushing of the cache when writing and configure time to live.
+
+Reading will come from the store, and then from the cache, this can reduce load on the store.
+
+```php
+// Cache usage configurations.
+'enableCache' => false,
+'forgetCacheByWrite' => true,
+'cacheTtl' => 15,
+```
+
 ### JSON storage
 
 You can modify the path used on run-time using `Setting::setPath($path)`.
