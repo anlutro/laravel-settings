@@ -59,5 +59,19 @@ return [
     */
     'defaults' => [
         'foo' => 'bar',
-    ]
+	],
+
+	/*
+    |--------------------------------------------------------------------------
+    | Override application config values
+    |--------------------------------------------------------------------------
+    |
+    | If defined, settings package will override these config values.
+    |
+    | Sample:
+    |   "app.locale" => "settings.locale",
+    |
+    */
+    'override' => [
+    ],
 ];
