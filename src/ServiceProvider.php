@@ -10,6 +10,7 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Foundation\Application;
+use Blade;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -67,6 +68,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			$this->publishes([
 				__DIR__.'/migrations/2015_08_25_172600_create_settings_table.php' => database_path('migrations/'.date('Y_m_d_His').'_create_settings_table.php')
 			], 'migrations');
+
+			//Override configs
+			$override = config('settings.override', []);
+
+			foreach (custom_array_dot($override) as $config_key => $setting_key) {
+				$config_key = $config_key ?: $setting_key;
+				try {
+					if (! is_null($value = setting($setting_key))) {
+						config([$config_key => $value]);
+					}
+				} catch (\Exception $e) {
+					continue;
+				}
+			}
+
+			// Register blade directive
+			Blade::directive('setting', function ($expression) {
+				return "<?php echo setting($expression); ?>";
+			});
 		} else {
 			$this->app['config']->package(
 				'anlutro/l4-settings', __DIR__ . '/config', 'anlutro/l4-settings'
