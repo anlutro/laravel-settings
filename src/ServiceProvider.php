@@ -10,6 +10,7 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Arr;
 use Blade;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -76,7 +77,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			if(function_exists('array_dot')){
 				$override_values = array_dot($override);
 			}else{
-				$override_values = \Illuminate\Support\Arr::dot($override);
+				$override_values = Arr::dot($override);
 			}
 
 			foreach ($override_values as $config_key => $setting_key) {
