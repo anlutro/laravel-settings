@@ -73,7 +73,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 			$override = config('settings.override', []);
 			
 			//Compatibility with Laravel >= 5.8 and < 5.7
-			$override_values = function_exists('array_dot')?array_dot($override):\Illuminate\Support\Arr::dot($override);
+			if(function_exists('array_dot')){
+				$override_values = array_dot($override);
+			}else{
+				$override_values = \Illuminate\Support\Arr::dot($override);
+			}
 
 			foreach ($override_values as $config_key => $setting_key) {
 				$config_key = $config_key ?: $setting_key;
