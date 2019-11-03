@@ -72,6 +72,8 @@ class JsonSettingStore extends SettingStore
 			$contents = '{}';
 		}
 
-		$this->files->put($this->path, $contents);
+		if($data !== $this->read()){
+			$this->files->put($this->path, $contents);
+		}
 	}
 }
