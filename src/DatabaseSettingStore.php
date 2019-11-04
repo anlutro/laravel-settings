@@ -179,6 +179,7 @@ class DatabaseSettingStore extends SettingStore
 				->where($this->keyColumn, '=', $key)
 				->update(array($this->valueColumn => $value));
 		}
+		$this->updated = [];
 
 		if ($insertData) {
 			$this->newQuery(true)
