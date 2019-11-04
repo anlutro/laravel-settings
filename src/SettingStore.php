@@ -39,13 +39,6 @@ abstract class SettingStore
 	 * @var boolean
 	 */
 	protected $loaded = false;
-  	
-	/**
-   	 * Updated settings
-   	 *
-   	 * @var array
-   	 */
-  	protected $updated = [];
 
 	/**
 	 * Get a specific key from the settings data.
@@ -94,11 +87,9 @@ abstract class SettingStore
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
 				ArrayUtil::set($this->data, $k, $v);
-				array_push($this->updated, $k);
 			}
 		} else {
 			ArrayUtil::set($this->data, $key, $value);
-			array_push($this->updated, $key);
 		}
 	}
 
