@@ -43,6 +43,10 @@ class JsonSettingStore extends SettingStore
 		}
 
 		$this->path = $path;
+		
+		// Reset and reload data with new path
+        	$this->forgetAll();
+		$this->load(true);
 	}
 
 	/**
