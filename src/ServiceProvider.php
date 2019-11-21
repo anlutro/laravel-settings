@@ -10,16 +10,10 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class ServiceProvider extends \Illuminate\Support\ServiceProvider implements DeferrableProvider
 {
-	/**
-	 * This provider is deferred and should be lazy loaded.
-	 *
-	 * @var boolean
-	 */
-	protected $defer = true;
-
 	/**
 	 * Register IoC bindings.
 	 */
