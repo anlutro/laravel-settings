@@ -155,15 +155,16 @@ class DatabaseSettingStore extends SettingStore
 		// "lists" was removed in Laravel 5.3, at which point
 		// "pluck" should provide the same functionality.
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
-		$keys = $keysQuery->$method($this->keyColumn);
+		$keys = $keysQuery->$method($this->valueColumn, $this->keyColumn);
 
 		$insertData = array_dot($data);
 		$updateData = array();
 		$deleteKeys = array();
 
-		foreach ($keys as $key) {
+		foreach ($keys as $key => $value) {
 			if (isset($insertData[$key])) {
-				$updateData[$key] = $insertData[$key];
+				if($insertData[$key] !== $keys[$key])
+					$updateData[$key] = $insertData[$key];
 			} else {
 				$deleteKeys[] = $key;
 			}
