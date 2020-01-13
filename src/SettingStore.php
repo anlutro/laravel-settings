@@ -158,7 +158,7 @@ abstract class SettingStore
 	 */
 	public function load($force = false)
 	{
-		if (!$this->loaded || $force) {
+		if ((!($this->loaded && Config::get('settings.enableUseLoadedData'))) || $force) {
 			$this->data = $this->readData();
 			$this->loaded = true;
 		}

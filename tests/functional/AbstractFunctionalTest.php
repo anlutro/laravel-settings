@@ -12,6 +12,9 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 		Config::shouldReceive('get')
 			->with('settings.enableCache')
 			->andReturn(false)
+			->shouldReceive('get')
+			->with('settings.enableUseLoadedData')
+			->andReturn(true)
 			->getMock();
 	}
 
