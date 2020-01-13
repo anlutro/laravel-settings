@@ -39,6 +39,7 @@ return [
 	// Name of the table used.
 	'table' => 'settings',
 	// Cache usage configurations.
+	// This cache is used when reading from storage, for to reduce storage load.
 	'enableCache' => false,
 	'forgetCacheByWrite' => true,
 	'cacheTtl' => 15,
