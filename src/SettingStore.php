@@ -25,6 +25,20 @@ abstract class SettingStore
 	 * @var array
 	 */
 	protected $data = array();
+	
+	/**
+	 * The settings updated data.
+	 *
+	 * @var array
+	 */
+	protected $updatedData = array();
+
+	/**
+	 * The settings updated keys.
+	 *
+	 * @var array
+	 */
+	protected $updatedKeys = array();
 
 	/**
 	 * Whether the store has changed since it was last loaded.
@@ -87,10 +101,14 @@ abstract class SettingStore
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
 				ArrayUtil::set($this->data, $k, $v);
+				ArrayUtil::set($this->updatedData, $k, $v);
 			}
 		} else {
 			ArrayUtil::set($this->data, $key, $value);
+		    	ArrayUtil::set($this->updatedData, $key, $value);
 		}
+		
+		$this->updatedKeys[] = $key;
 	}
 
 	/**
