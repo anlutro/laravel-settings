@@ -158,7 +158,7 @@ class DatabaseSettingStore extends SettingStore
 		$keys = $keysQuery->$method($this->keyColumn);
 
 		$insertData = array_dot($data);
-		$updatedData = array_dot($data);
+		$updatedData = array_dot($this->updatedData);
 		$updateData = array();
 		$deleteKeys = array();
 
@@ -172,10 +172,10 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		foreach ($updateData as $key => $value) {
-			if (in_array($key, $this->updatedKeys) && $updateData[$key] !== $updatedData[$key]) {
+            		if (in_array($key, $this->updatedKeys) && $updateData[$key] !== $updatedData[$key]) {
 				$this->newQuery()
 					->where($this->keyColumn, '=', $key)
-					->update(array($this->valueColumn => $value));
+					->update(array($this->valueColumn => $updatedData[$key]));
 			}
 		}
 
