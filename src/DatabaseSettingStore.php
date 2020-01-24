@@ -171,9 +171,11 @@ class DatabaseSettingStore extends SettingStore
 		}
 
 		foreach ($updateData as $key => $value) {
-			$this->newQuery()
-				->where($this->keyColumn, '=', $key)
-				->update(array($this->valueColumn => $value));
+			if (in_array($key, $this->updatedKeys) && $updateData[$value] !== $updatedData[$value]) {
+				$this->newQuery()
+					->where($this->keyColumn, '=', $key)
+					->update(array($this->valueColumn => $value));
+			}
 		}
 
 		if ($insertData) {
