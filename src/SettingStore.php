@@ -100,11 +100,9 @@ abstract class SettingStore
 		
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
-				ArrayUtil::set($this->data, $k, $v);
 				ArrayUtil::set($this->updatedData, $k, $v);
 			}
 		} else {
-			ArrayUtil::set($this->data, $key, $value);
 		    	ArrayUtil::set($this->updatedData, $key, $value);
 		}
 		
