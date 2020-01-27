@@ -29,8 +29,8 @@ class JsonSettingStoreTest extends TestCase
 		$files = $this->mockFilesystem();
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(false);
-		$store = $this->makeStore($files);
-		$this->expectException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
+        $this->makeStore($files);
 	}
 
 	/**
@@ -41,8 +41,8 @@ class JsonSettingStoreTest extends TestCase
 		$files = $this->mockFilesystem();
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(false);
 		$files->shouldReceive('put')->once()->with('fakepath', '{}')->andReturn(false);
-		$store = $this->makeStore($files);
         $this->expectException('InvalidArgumentException');
+        $this->makeStore($files);
     }
 
 	/**
@@ -54,9 +54,8 @@ class JsonSettingStoreTest extends TestCase
 		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
 		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('[[!1!11]');
-
-		$store = $this->makeStore($files);
-		$store->get('foo');
         $this->expectException('RuntimeException');
+        $store = $this->makeStore($files);
+        $store->get('foo');
     }
 }

@@ -9,25 +9,17 @@ cache:
 
 language: php
 
-php: 
-  - 5.6
-  - 7.1
+php:
   - 7.2
   - 7.3
+  - 7.4
 
 env:
-  # avoid slow dependency resolution specifically for laravel 4.1
-  - COMPOSER_REQS="laravel/framework:4.1.* illuminate/support:4.1.* phpunit/phpunit:5.7.* symfony/yaml:3.3.* symfony/filesystem:2.8.* symfony/event-dispatcher:2.8.*"
-  - COMPOSER_REQS="laravel/framework:4.2.*"
-  - COMPOSER_REQS="laravel/framework:5.1.*"
-  - COMPOSER_REQS="laravel/framework:5.5.*"
-  - COMPOSER_REQS="laravel/framework:>=5.7"
+ - COMPOSER_REQS="laravel/framework:>=5.7"
 
 matrix:
   exclude:
     # laravel 5.5 and higher only supports php 7
-    - php: 5.6
-      env: COMPOSER_REQS="laravel/framework:5.5.*"
     - php: 5.6
       env: COMPOSER_REQS="laravel/framework:>=5.7"
 
