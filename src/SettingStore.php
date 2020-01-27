@@ -34,13 +34,6 @@ abstract class SettingStore
 	protected $updatedData = array();
 
 	/**
-	 * The settings updated keys.
-	 *
-	 * @var array
-	 */
-	protected $updatedKeys = array();
-
-	/**
 	 * Whether the store has changed since it was last loaded.
 	 *
 	 * @var boolean
@@ -105,8 +98,6 @@ abstract class SettingStore
 		} else {
 		    	ArrayUtil::set($this->updatedData, $key, $value);
 		}
-		
-		$this->updatedKeys[] = $key;
 	}
 
 	/**
@@ -176,6 +167,7 @@ abstract class SettingStore
 	{
 		if (!$this->loaded || $force) {
 			$this->data = $this->readData();
+			$this->updatedData = $this->readData();
 			$this->loaded = true;
 		}
 	}
