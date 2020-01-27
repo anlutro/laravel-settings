@@ -1,13 +1,14 @@
 <?php
 
 use Mockery as m;
-use Illuminate\Container\Container;
+use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\Container;
 
-class HelperTest extends PHPUnit_Framework_TestCase
+class HelperTest extends TestCase
 {
 	public static $functions;
 
-	public function setUp()
+    public function setUp(): void
 	{
 		self::$functions = m::mock();
 
@@ -16,7 +17,7 @@ class HelperTest extends PHPUnit_Framework_TestCase
 		    return;
 		}
 
-		Container::setInstance(new Container);
+		//Container::setInstance(new Container);
 
 		$store = m::mock('anlutro\LaravelSettings\SettingStore');
 
@@ -36,7 +37,8 @@ class HelperTest extends PHPUnit_Framework_TestCase
 	{
 		app('setting')->shouldReceive('get')->with('foo', null)->once();
 
-		setting('foo');
+		$foo = setting('foo');
+		$this->assertEquals(null, $foo);
 	}
 
 	public function two_parameters_return_a_default_value()
@@ -47,7 +49,7 @@ class HelperTest extends PHPUnit_Framework_TestCase
 	}
 
 
-	/** @test */
+	/**  */
 	public function array_parameter_call_set_method_into_store() 
 	{
 		app('setting')->shouldReceive('set')->with(['foo', 'bar'])->once();

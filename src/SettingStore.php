@@ -25,13 +25,20 @@ abstract class SettingStore
 	 * @var array
 	 */
 	protected $data = array();
-	
+
 	/**
 	 * The settings updated data.
 	 *
 	 * @var array
 	 */
 	protected $updatedData = array();
+
+	/**
+	 * The settings updated data.
+	 *
+	 * @var array
+	 */
+	protected $persistedData = array();
 
 	/**
 	 * Whether the store has changed since it was last loaded.
@@ -93,10 +100,12 @@ abstract class SettingStore
 		
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
+				ArrayUtil::set($this->data, $k, $v);
 				ArrayUtil::set($this->updatedData, $k, $v);
 			}
 		} else {
-		    	ArrayUtil::set($this->updatedData, $key, $value);
+			ArrayUtil::set($this->data, $key, $value);
+			ArrayUtil::set($this->updatedData, $key, $value);
 		}
 	}
 
@@ -111,6 +120,7 @@ abstract class SettingStore
 
 		if ($this->has($key)) {
 			ArrayUtil::forget($this->data, $key);
+			ArrayUtil::forget($this->updatedData, $key);
 		}
 	}
 
@@ -123,6 +133,7 @@ abstract class SettingStore
 	{
 		$this->unsaved = true;
 		$this->data = array();
+		$this->updatedData = array();
 	}
 
 	/**
@@ -167,8 +178,9 @@ abstract class SettingStore
 	{
 		if (!$this->loaded || $force) {
 			$this->data = $this->readData();
-			$this->updatedData = $this->data;
-			$this->loaded = true;
+            $this->persistedData = $this->data;
+            $this->data = array_merge($this->updatedData, $this->data);
+            $this->loaded = true;
 		}
 	}
 

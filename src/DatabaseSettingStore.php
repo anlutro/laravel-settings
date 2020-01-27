@@ -157,24 +157,25 @@ class DatabaseSettingStore extends SettingStore
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
 		$keys = $keysQuery->$method($this->keyColumn);
 
-		$insertData = array_dot($this->updatedData);
-		$existingData = array_dot($data);
+		$insertData = array_dot($data);
+		$updatedData = array_dot($this->updatedData);
+		$persistedData = array_dot($this->persistedData);
 		$updateData = array();
 		$deleteKeys = array();
 
 		foreach ($keys as $key) {
-            if (isset($existingData[$key]) && isset($insertData[$key]) && (string) $insertData[$key] !== (string) $existingData[$key]) {
-                $updateData[$key] = $insertData[$key];
-            } elseif (! isset($existingData[$key])) {
-                $deleteKeys[] = $key;
-            }
+            if (isset($updatedData[$key]) && isset($persistedData[$key]) && (string)$updatedData[$key] !== (string)$persistedData[$key]) {
+				$updateData[$key] = $updatedData[$key];
+            } elseif (!isset($insertData[$key])) {
+				$deleteKeys[] = $key;
+			}
 			unset($insertData[$key]);
 		}
 
-        foreach ($updateData as $key => $value) {
-				$this->newQuery()
-					->where($this->keyColumn, '=', $key)
-					->update(array($this->valueColumn => $value));
+		foreach ($updateData as $key => $value) {
+			$this->newQuery()
+				->where($this->keyColumn, '=', $key)
+				->update(array($this->valueColumn => $value));
 		}
 
 		if ($insertData) {
