@@ -167,7 +167,7 @@ abstract class SettingStore
 	{
 		if (!$this->loaded || $force) {
 			$this->data = $this->readData();
-			$this->updatedData = $this->readData();
+			$this->updatedData = $this->data;
 			$this->loaded = true;
 		}
 	}
