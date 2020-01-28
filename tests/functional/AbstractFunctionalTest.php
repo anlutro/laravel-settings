@@ -2,20 +2,36 @@
 
 use anlutro\LaravelSettings\DatabaseSettingStore;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
+abstract class AbstractFunctionalTest extends TestCase
 {
 	protected abstract function createStore(array $data = array());
 
-	public function setUp()
+	public function setUp(): void
 	{
 		Config::shouldReceive('get')
 			->with('settings.enableCache')
 			->andReturn(false)
 			->getMock();
+
+		Config::shouldReceive('get')
+			->with('settings.forgetCacheByWrite')
+			->andReturn(false)
+			->getMock();
+
+		Config::shouldReceive('get')
+			->with('settings.defaults.foo')
+			->andReturn(false)
+			->getMock();
+
+		Config::shouldReceive('get')
+			->with('settings.defaults.bar')
+			->andReturn(false)
+			->getMock();
 	}
 
-	protected function assertStoreEquals($store, $expected, $message = null)
+	protected function assertStoreEquals($store, $expected, $message = '')
 	{
 		$this->assertEquals($expected, $store->all(), $message);
 		$store->save();
@@ -23,7 +39,7 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $store->all(), $message);
 	}
 
-	protected function assertStoreKeyEquals($store, $key, $expected, $message = null)
+	protected function assertStoreKeyEquals($store, $key, $expected, $message = '')
 	{
 		$this->assertEquals($expected, $store->get($key), $message);
 		$store->save();
@@ -59,7 +75,8 @@ abstract class AbstractFunctionalTest extends PHPUnit_Framework_TestCase
 	{
 		$store = $this->createStore();
 		$store->set('foo', 'bar');
-		$this->setExpectedException('UnexpectedValueException', 'Non-array segment encountered');
+		$this->expectException('UnexpectedValueException');
+		$this->expectExceptionMessage('Non-array segment encountered');
 		$store->set('foo.bar', 'baz');
 	}
 

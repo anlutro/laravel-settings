@@ -158,13 +158,15 @@ class DatabaseSettingStore extends SettingStore
 		$keys = $keysQuery->$method($this->keyColumn);
 
 		$insertData = array_dot($data);
+		$updatedData = array_dot($this->updatedData);
+		$persistedData = array_dot($this->persistedData);
 		$updateData = array();
 		$deleteKeys = array();
 
 		foreach ($keys as $key) {
-			if (isset($insertData[$key])) {
-				$updateData[$key] = $insertData[$key];
-			} else {
+            if (isset($updatedData[$key]) && isset($persistedData[$key]) && (string)$updatedData[$key] !== (string)$persistedData[$key]) {
+				$updateData[$key] = $updatedData[$key];
+            } elseif (!isset($insertData[$key])) {
 				$deleteKeys[] = $key;
 			}
 			unset($insertData[$key]);
