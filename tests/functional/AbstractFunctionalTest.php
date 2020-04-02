@@ -3,6 +3,7 @@
 use anlutro\LaravelSettings\DatabaseSettingStore;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\TestCase;
+use Mockery as m;
 
 abstract class AbstractFunctionalTest extends TestCase
 {
@@ -19,16 +20,11 @@ abstract class AbstractFunctionalTest extends TestCase
 			->with('settings.forgetCacheByWrite')
 			->andReturn(false)
 			->getMock();
+	}
 
-		Config::shouldReceive('get')
-			->with('settings.defaults.foo')
-			->andReturn(false)
-			->getMock();
-
-		Config::shouldReceive('get')
-			->with('settings.defaults.bar')
-			->andReturn(false)
-			->getMock();
+	public function tearDown(): void
+	{
+		m::close();
 	}
 
 	protected function assertStoreEquals($store, $expected, $message = '')

@@ -55,6 +55,23 @@ abstract class SettingStore
 	protected $loaded = false;
 
 	/**
+	 * Default values.
+	 *
+	 * @var array
+	 */
+	protected $defaults = [];
+
+	/**
+	 * Set default values.
+	 *
+	 * @param array $defaults
+	 */
+	public function setDefaults(array $defaults)
+	{
+		$this->defaults = $defaults;
+	}
+
+	/**
 	 * Get a specific key from the settings data.
 	 *
 	 * @param  string|array $key
@@ -65,7 +82,7 @@ abstract class SettingStore
 	public function get($key, $default = null)
 	{
 		if ($default === NULL && !is_array($key)) {
-			$default = Config::get('settings.defaults.'.$key);
+			$default = ArrayUtil::get($this->defaults, $key);
 		}
         
 		$this->load();
