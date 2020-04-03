@@ -64,6 +64,14 @@ class SettingsManager extends Manager
 	{
 		$store->setDefaults($this->getConfig('anlutro/l4-settings::defaults'));
 
+		if ($this->getConfig('anlutro/l4-settings::enableCache')) {
+			$store->setCache(
+				$this->app['cache'],
+				$this->getConfig('anlutro/l4-settings::cacheTtl'),
+				$this->getConfig('anlutro/l4-settings::forgetCacheByWrite'),
+			);
+		}
+
 		return $store;
 	}
 }

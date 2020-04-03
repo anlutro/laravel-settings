@@ -38,14 +38,24 @@ return [
 	'connection' => null,
 	// Name of the table used.
 	'table' => 'settings',
-	// Cache usage configurations.
-	'enableCache' => false,
-	'forgetCacheByWrite' => true,
-	'cacheTtl' => 15,
 	// If you want to use custom column names in database store you could
 	// set them in this configuration
 	'keyColumn' => 'key',
 	'valueColumn' => 'value',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache settings
+    |--------------------------------------------------------------------------
+    |
+    | If you want all setting calls to go through Laravel's cache system.
+    |
+    */
+	'enableCache' => false,
+	// Whether to reset the cache when changing a setting.
+	'forgetCacheByWrite' => true,
+	// TTL in seconds.
+	'cacheTtl' => 15,
     
     /*
     |--------------------------------------------------------------------------

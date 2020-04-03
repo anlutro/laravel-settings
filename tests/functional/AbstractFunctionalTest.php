@@ -9,19 +9,6 @@ abstract class AbstractFunctionalTest extends TestCase
 {
 	protected abstract function createStore(array $data = array());
 
-	public function setUp(): void
-	{
-		Config::shouldReceive('get')
-			->with('settings.enableCache')
-			->andReturn(false)
-			->getMock();
-
-		Config::shouldReceive('get')
-			->with('settings.forgetCacheByWrite')
-			->andReturn(false)
-			->getMock();
-	}
-
 	public function tearDown(): void
 	{
 		m::close();
