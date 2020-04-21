@@ -26,6 +26,7 @@ class DatabaseTest extends AbstractFunctionalTest
 		$this->capsule->schema()->drop('persistant_settings');
 		unset($this->capsule);
 		unset($this->container);
+		parent::tearDown();
 	}
 
 	protected function createStore(array $data = array())

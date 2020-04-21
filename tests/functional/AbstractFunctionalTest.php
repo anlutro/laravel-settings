@@ -3,32 +3,15 @@
 use anlutro\LaravelSettings\DatabaseSettingStore;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\TestCase;
+use Mockery as m;
 
 abstract class AbstractFunctionalTest extends TestCase
 {
 	protected abstract function createStore(array $data = array());
 
-	public function setUp(): void
+	public function tearDown(): void
 	{
-		Config::shouldReceive('get')
-			->with('settings.enableCache')
-			->andReturn(false)
-			->getMock();
-
-		Config::shouldReceive('get')
-			->with('settings.forgetCacheByWrite')
-			->andReturn(false)
-			->getMock();
-
-		Config::shouldReceive('get')
-			->with('settings.defaults.foo')
-			->andReturn(false)
-			->getMock();
-
-		Config::shouldReceive('get')
-			->with('settings.defaults.bar')
-			->andReturn(false)
-			->getMock();
+		m::close();
 	}
 
 	protected function assertStoreEquals($store, $expected, $message = '')

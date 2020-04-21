@@ -25,5 +25,6 @@ class JsonTest extends AbstractFunctionalTest
 	{
 		$path = dirname(__DIR__).'/tmp/store.json';
 		unlink($path);
+		parent::tearDown();
 	}
 }
