@@ -41,21 +41,21 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	protected $valueColumn;
 
-    /**
-     * The value column name to query from.
-     *
-     * @var string
-     */
-    protected $createdAtColumn;
+    	/**
+     	* The createdAt column storing timestamp.
+     	*
+     	* @var string
+     	*/
+    	protected $createdAtColumn;
 
-    /**
-     * The value column name to query from.
-     *
-     * @var string
-     */
-    protected $updatedAtColumn;
+    	/**
+     	* The updatedAt column storing timestamp.
+     	*
+     	* @var string
+     	*/
+    	protected $updatedAtColumn;
 
-    /**
+    	/**
 	 * Any query constraints that should be applied.
 	 *
 	 * @var Closure|null
