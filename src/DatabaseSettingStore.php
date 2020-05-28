@@ -118,25 +118,25 @@ class DatabaseSettingStore extends SettingStore
 		$this->valueColumn = $valueColumn;
 	}
 
-    /**
-     * Set the value column name to query from.
-     *
-     * @param string $value_column
-     */
-    public function setCreatedAtColumn($valueColumn)
-    {
-        $this->createdAtColumn = $valueColumn;
-    }
+    	/**
+     	* Set the value column name to query from.
+     	*
+     	* @param string $value_column
+     	*/
+    	public function setCreatedAtColumn($valueColumn)
+    	{
+		$this->createdAtColumn = $valueColumn;
+    	}
 
-    /**
-     * Set the value column name to query from.
-     *
-     * @param string $value_column
-     */
-    public function setUpdatedAtColumn($valueColumn)
-    {
-        $this->updatedAtColumn = $valueColumn;
-    }
+    	/**
+     	* Set the value column name to query from.
+     	*
+     	* @param string $value_column
+     	*/
+    	public function setUpdatedAtColumn($valueColumn)
+    	{
+		$this->updatedAtColumn = $valueColumn;
+    	}
 
 	/**
 	 * Set the query constraint.
