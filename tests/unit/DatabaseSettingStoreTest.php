@@ -22,13 +22,15 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('pluck')->atMost(1)->andReturn(array('nest.one'));
 		$dbData = $this->getDbData();
 		unset($dbData[1]); // remove the nest.one array member
-        $query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
-            ->shouldReceive('update')->with(Mockery::on((function ($argument) {
-            if ($argument['value'] === 'nestone' && array_key_exists('updated_at', $argument)) {
-                return true;
-            }
-            return false;
-        })));
+		$query->shouldReceive('where')->with('key', '=', 'nest.one')->andReturn(m::self())->getMock()
+            	      ->shouldReceive('update')->with(Mockery::on((function ($argument) {
+	    		if ($argument['value'] === 'nestone' && array_key_exists('updated_at', $argument)) 
+			{
+				return true;
+	    		}
+			
+	    		return false;
+		})));
 
 		$self = $this; // 5.3 compatibility
 		$query->shouldReceive('insert')->once()->andReturnUsing(function($arg) use($dbData, $self) {
@@ -38,15 +40,15 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 
 			// Ensure that updated_at and created_at columns exist in table
 			foreach ($arg as $argEntry)
-            {
-                if (array_key_exists('created_at', $argEntry) === false ||
-                    array_key_exists('updated_at', $argEntry) === false)
-                {
-                    return false;
-                }
-            }
+		    	{
+				if (array_key_exists('created_at', $argEntry) === false ||
+			    	array_key_exists('updated_at', $argEntry) === false)
+				{
+			    		return false;
+				}
+		    	}
 
-            foreach ($dbDataEntries as $dbDataEntry) {
+            	foreach ($dbDataEntries as $dbDataEntry) {
 				$self->assertContains($dbDataEntry, $argEntries);
 			}
 		});
@@ -85,15 +87,16 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$query->shouldReceive('get')->once()->andReturn(array());
 		$query->shouldReceive('lists')->atMost(1)->andReturn(array());
 		$query->shouldReceive('pluck')->atMost(1)->andReturn(array());
-        $query->shouldReceive('insert')->once()->with(\Mockery::on(function ($argument) {
-            if ($argument[0]['key'] === 'foo' &&
-                $argument[0]['value'] === 'bar' &&
-                $argument[0]['extracol'] === 'extradata' &&
-                array_key_exists('updated_at', $argument[0])) {
-                return true;
-            }
-            return false;
-        }));
+        	$query->shouldReceive('insert')->once()->with(\Mockery::on(function ($argument) {
+            		if ($argument[0]['key'] === 'foo' &&
+                	$argument[0]['value'] === 'bar' &&
+                	$argument[0]['extracol'] === 'extradata' &&
+                	array_key_exists('updated_at', $argument[0]))
+			{
+                		return true;
+            		}
+            		return false;
+        	}));
 		
 		$store = $this->makeStore($connection);
 		$store->setExtraColumns(array('extracol' => 'extradata'));
