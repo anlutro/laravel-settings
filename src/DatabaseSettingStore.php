@@ -41,7 +41,21 @@ class DatabaseSettingStore extends SettingStore
 	 */
 	protected $valueColumn;
 
-	/**
+    	/**
+     	* The createdAt column storing timestamp.
+     	*
+     	* @var string
+     	*/
+    	protected $createdAtColumn;
+
+    	/**
+     	* The updatedAt column storing timestamp.
+     	*
+     	* @var string
+     	*/
+    	protected $updatedAtColumn;
+
+    	/**
 	 * Any query constraints that should be applied.
 	 *
 	 * @var Closure|null
@@ -59,7 +73,12 @@ class DatabaseSettingStore extends SettingStore
 	 * @param \Illuminate\Database\Connection $connection
 	 * @param string                         $table
 	 */
-	public function __construct(Connection $connection, $table = null, $keyColumn = null, $valueColumn = null)
+	public function __construct(Connection $connection,
+                                $table = null,
+                                $keyColumn = null,
+                                $valueColumn = null,
+                                $createdAtColumn = null,
+                                $updatedAtColumn = null)
 	{
 		$this->connection = $connection;
 		$this->table = $table ?: 'persistant_settings';
@@ -98,6 +117,26 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$this->valueColumn = $valueColumn;
 	}
+
+    	/**
+     	* Set the value column name to query from.
+     	*
+     	* @param string $value_column
+     	*/
+    	public function setCreatedAtColumn($valueColumn)
+    	{
+		$this->createdAtColumn = $valueColumn;
+    	}
+
+    	/**
+     	* Set the value column name to query from.
+     	*
+     	* @param string $value_column
+     	*/
+    	public function setUpdatedAtColumn($valueColumn)
+    	{
+		$this->updatedAtColumn = $valueColumn;
+    	}
 
 	/**
 	 * Set the query constraint.
@@ -185,7 +224,7 @@ class DatabaseSettingStore extends SettingStore
 		foreach ($updateData as $key => $value) {
 			$updatedAtValue = $this->freshTimestamp();
 			$this->newQuery()
-				->where($this->keyColumn, '=', $key)
+				->where($this->keyColumn, '=', strval($key))
 				->update(array(
 					$this->valueColumn => $value,
 					$this->updatedAtColumn => $updatedAtValue));

@@ -17,6 +17,8 @@ class DatabaseTest extends AbstractFunctionalTest
 		$this->capsule->schema()->create('persistant_settings', function($t) {
 			$t->string('key', 64)->unique();
 			$t->string('value', 4096);
+            		$t->integer('created_at');
+            		$t->integer('updated_at');
 		});
 	}
 
