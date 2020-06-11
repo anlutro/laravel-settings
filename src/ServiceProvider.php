@@ -59,7 +59,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function boot()
 	{
 		if (version_compare(Application::VERSION, '5.3', '>=')) {
-//			$this->loadMigrationsFrom(__DIR__.'/migrations');
 			$this->publishes([
 				__DIR__.'/config/config.php' => config_path('settings.php')
 			], 'config');
