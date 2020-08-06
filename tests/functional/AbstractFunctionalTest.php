@@ -7,18 +7,30 @@ use Mockery as m;
 
 abstract class AbstractFunctionalTest extends TestCase
 {
-	protected abstract function createStore(array $data = array());
+	protected $defaults;
+
+	protected abstract function createStore(array $data = null);
+
+	protected function getStore(array $data = null)
+	{
+		$store = $this->createStore($data);
+		if ($this->defaults) {
+			$store->setDefaults($this->defaults);
+		}
+		return $store;
+	}
 
 	public function tearDown(): void
 	{
 		m::close();
+		$this->defaults = [];
 	}
 
 	protected function assertStoreEquals($store, $expected, $message = '')
 	{
 		$this->assertEquals($expected, $store->all(), $message);
 		$store->save();
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$this->assertEquals($expected, $store->all(), $message);
 	}
 
@@ -26,21 +38,21 @@ abstract class AbstractFunctionalTest extends TestCase
 	{
 		$this->assertEquals($expected, $store->get($key), $message);
 		$store->save();
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$this->assertEquals($expected, $store->get($key), $message);
 	}
 
 	/** @test */
 	public function store_is_initially_empty()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$this->assertEquals(array(), $store->all());
 	}
 
 	/** @test */
 	public function written_changes_are_saved()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$store->set('foo', 'bar');
 		$this->assertStoreKeyEquals($store, 'foo', 'bar');
 	}
@@ -48,7 +60,7 @@ abstract class AbstractFunctionalTest extends TestCase
 	/** @test */
 	public function nested_keys_are_nested()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$store->set('foo.bar', 'baz');
 		$this->assertStoreEquals($store, array('foo' => array('bar' => 'baz')));
 	}
@@ -56,7 +68,7 @@ abstract class AbstractFunctionalTest extends TestCase
 	/** @test */
 	public function cannot_set_nested_key_on_non_array_member()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$store->set('foo', 'bar');
 		$this->expectException('UnexpectedValueException');
 		$this->expectExceptionMessage('Non-array segment encountered');
@@ -66,7 +78,7 @@ abstract class AbstractFunctionalTest extends TestCase
 	/** @test */
 	public function can_forget_key()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$store->set('foo', 'bar');
 		$store->set('bar', 'baz');
 		$this->assertStoreEquals($store, array('foo' => 'bar', 'bar' => 'baz'));
@@ -78,7 +90,7 @@ abstract class AbstractFunctionalTest extends TestCase
 	/** @test */
 	public function can_forget_nested_key()
 	{
-		$store = $this->createStore();
+		$store = $this->getStore();
 		$store->set('foo.bar', 'baz');
 		$store->set('foo.baz', 'bar');
 		$store->set('bar.foo', 'baz');
@@ -119,9 +131,18 @@ abstract class AbstractFunctionalTest extends TestCase
 	/** @test */
 	public function can_forget_all()
 	{
-		$store = $this->createStore(array('foo' => 'bar'));
+		$store = $this->getStore(array('foo' => 'bar'));
 		$this->assertStoreEquals($store, array('foo' => 'bar'));
 		$store->forgetAll();
 		$this->assertStoreEquals($store, array());
+	}
+
+	/** @test */
+	public function defaults_are_respected()
+	{
+		$this->defaults = ['foo' => 'default', 'bar' => 'default'];
+		$store = $this->getStore(array('foo' => 'bar'));
+		$this->assertStoreEquals($store, ['foo' => 'bar']);
+		$this->assertStoreKeyEquals($store, ['foo', 'bar'], ['foo' => 'bar', 'bar' => 'default']);
 	}
 }

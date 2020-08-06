@@ -114,8 +114,10 @@ abstract class SettingStore
 	 */
 	public function get($key, $default = null)
 	{
-		if ($default === NULL && !is_array($key)) {
+		if ($default === NULL) {
 			$default = ArrayUtil::get($this->defaults, $key);
+		} elseif (is_array($key) && is_array($default)) {
+			$default = array_merge(ArrayUtil::get($this->defaults, $key, []), $default);
 		}
         
 		$this->load();
