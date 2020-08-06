@@ -17,6 +17,7 @@ class ArrayUtilTest extends TestCase
 	public function getGetData()
 	{
 		return array(
+			// $data, $key, $expected
 			array(array(), 'foo', null),
 			array(array('foo' => 'bar'), 'foo', 'bar'),
 			array(array('foo' => 'bar'), 'bar', null),
@@ -45,6 +46,26 @@ class ArrayUtilTest extends TestCase
 				array('foo' => array('bar' => 'baz'), 'baz' => null),
 			),
 		);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider getGetWithDefaultsData
+	 */
+	public function getWithDefaultsReturnsCorrectValue(array $data, $key, $default, $expected)
+	{
+		$this->assertEquals($expected, ArrayUtil::get($data, $key, $default));
+	}
+
+	public function getGetWithDefaultsData()
+	{
+		return [
+			// $data, $key, $default, $expected
+			[[], 'foo', 'default', 'default'],
+			[['foo' => 'value'], 'foo', 'default', 'value'],
+			[[], ['foo'], ['foo' => 'default'], ['foo' => 'default']],
+			[['foo' => 'value'], ['foo'], ['foo' => 'default'], ['foo' => 'value']],
+		];
 	}
 
 	/**
