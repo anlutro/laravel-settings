@@ -29,7 +29,7 @@ class DatabaseTest extends AbstractFunctionalTest
 		parent::tearDown();
 	}
 
-	protected function createStore(array $data = array())
+	protected function createStore(array $data = null)
 	{
 		if ($data) {
 			$store = $this->createStore();
