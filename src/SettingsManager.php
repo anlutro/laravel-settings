@@ -23,23 +23,27 @@ class SettingsManager extends Manager
 	{
 		$path = $this->getConfig('anlutro/l4-settings::path');
 
-		return new JsonSettingStore($this->app['files'], $path);
+		$store = new JsonSettingStore($this->getSupportedContainer()['files'], $path);
+
+		return $this->wrapDriver($store);
 	}
 
 	public function createDatabaseDriver()
 	{
 		$connectionName = $this->getConfig('anlutro/l4-settings::connection');
-		$connection = $this->app['db']->connection($connectionName);
+		$connection = $this->getSupportedContainer()['db']->connection($connectionName);
 		$table = $this->getConfig('anlutro/l4-settings::table');
 		$keyColumn = $this->getConfig('anlutro/l4-settings::keyColumn');
 		$valueColumn = $this->getConfig('anlutro/l4-settings::valueColumn');
 
-		return new DatabaseSettingStore($connection, $table, $keyColumn, $valueColumn);
+		$store = new DatabaseSettingStore($connection, $table, $keyColumn, $valueColumn);
+
+		return $this->wrapDriver($store);
 	}
 
 	public function createMemoryDriver()
 	{
-		return new MemorySettingStore();
+		return $this->wrapDriver(new MemorySettingStore());
 	}
 
 	public function createArrayDriver()
@@ -53,6 +57,26 @@ class SettingsManager extends Manager
 			$key = str_replace('anlutro/l4-settings::', 'settings.', $key);
 		}
 
-		return $this->app['config']->get($key);
+		return $this->getSupportedContainer()['config']->get($key);
 	}
+
+	protected function wrapDriver($store)
+	{
+		$store->setDefaults($this->getConfig('anlutro/l4-settings::defaults'));
+
+		if ($this->getConfig('anlutro/l4-settings::enableCache')) {
+			$store->setCache(
+				$this->getSupportedContainer()['cache'],
+				$this->getConfig('anlutro/l4-settings::cacheTtl'),
+				$this->getConfig('anlutro/l4-settings::forgetCacheByWrite')
+			);
+		}
+
+		return $store;
+	}
+
+	protected function getSupportedContainer()
+    {
+	    return isset($this->app) ? $this->app : $this->container;
+    }
 }

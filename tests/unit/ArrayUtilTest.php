@@ -1,8 +1,9 @@
 <?php
 
 use anlutro\LaravelSettings\ArrayUtil;
+use PHPUnit\Framework\TestCase;
 
-class ArrayUtilTest extends PHPUnit_Framework_TestCase
+class ArrayUtilTest extends TestCase
 {
 	/**
 	 * @test
@@ -16,6 +17,7 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 	public function getGetData()
 	{
 		return array(
+			// $data, $key, $expected
 			array(array(), 'foo', null),
 			array(array('foo' => 'bar'), 'foo', 'bar'),
 			array(array('foo' => 'bar'), 'bar', null),
@@ -44,6 +46,26 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 				array('foo' => array('bar' => 'baz'), 'baz' => null),
 			),
 		);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider getGetWithDefaultsData
+	 */
+	public function getWithDefaultsReturnsCorrectValue(array $data, $key, $default, $expected)
+	{
+		$this->assertEquals($expected, ArrayUtil::get($data, $key, $default));
+	}
+
+	public function getGetWithDefaultsData()
+	{
+		return [
+			// $data, $key, $default, $expected
+			[[], 'foo', 'default', 'default'],
+			[['foo' => 'value'], 'foo', 'default', 'value'],
+			[[], ['foo'], ['foo' => 'default'], ['foo' => 'default']],
+			[['foo' => 'value'], ['foo'], ['foo' => 'default'], ['foo' => 'value']],
+		];
 	}
 
 	/**
@@ -102,7 +124,8 @@ class ArrayUtilTest extends PHPUnit_Framework_TestCase
 	public function setThrowsExceptionOnNonArraySegment()
 	{
 		$data = array('foo' => 'bar');
-		$this->setExpectedException('UnexpectedValueException', 'Non-array segment encountered');
+		$this->expectException('UnexpectedValueException');
+		$this->expectExceptionMessage('Non-array segment encountered');
 		ArrayUtil::set($data, 'foo.bar', 'baz');
 	}
 

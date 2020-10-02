@@ -10,6 +10,7 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Arr;
 
 class DatabaseSettingStore extends SettingStore
 {
@@ -157,14 +158,16 @@ class DatabaseSettingStore extends SettingStore
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
 		$keys = $keysQuery->$method($this->keyColumn);
 
-		$insertData = array_dot($data);
+		$insertData = Arr::dot($data);
+		$updatedData = Arr::dot($this->updatedData);
+		$persistedData = Arr::dot($this->persistedData);
 		$updateData = array();
 		$deleteKeys = array();
 
 		foreach ($keys as $key) {
-			if (isset($insertData[$key])) {
-				$updateData[$key] = $insertData[$key];
-			} else {
+            if (isset($updatedData[$key]) && isset($persistedData[$key]) && (string)$updatedData[$key] !== (string)$persistedData[$key]) {
+				$updateData[$key] = $updatedData[$key];
+            } elseif (!isset($insertData[$key])) {
 				$deleteKeys[] = $key;
 			}
 			unset($insertData[$key]);
@@ -172,7 +175,7 @@ class DatabaseSettingStore extends SettingStore
 
 		foreach ($updateData as $key => $value) {
 			$this->newQuery()
-				->where($this->keyColumn, '=', $key)
+				->where($this->keyColumn, '=', strval($key))
 				->update(array($this->valueColumn => $value));
 		}
 
@@ -190,10 +193,10 @@ class DatabaseSettingStore extends SettingStore
 
 	/**
 	 * Transforms settings data into an array ready to be insterted into the
-	 * database. Call array_dot on a multidimensional array before passing it
+	 * database. Call Arr::dot on a multidimensional array before passing it
 	 * into this method!
 	 *
-	 * @param  array $data Call array_dot on a multidimensional array before passing it into this method!
+	 * @param  array $data Call Arr::dot on a multidimensional array before passing it into this method!
 	 *
 	 * @return array
 	 */

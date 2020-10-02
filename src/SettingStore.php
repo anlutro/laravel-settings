@@ -9,16 +9,33 @@
 
 namespace anlutro\LaravelSettings;
 
-use \Illuminate\Support\Facades\Config;
-
 abstract class SettingStore
 {
+	/**
+	 * Cache key for save
+	 */
+	const CACHE_KEY = 'setting:cache';
+
 	/**
 	 * The settings data.
 	 *
 	 * @var array
 	 */
 	protected $data = array();
+
+	/**
+	 * The settings updated data.
+	 *
+	 * @var array
+	 */
+	protected $updatedData = array();
+
+	/**
+	 * The settings updated data.
+	 *
+	 * @var array
+	 */
+	protected $persistedData = array();
 
 	/**
 	 * Whether the store has changed since it was last loaded.
@@ -35,6 +52,59 @@ abstract class SettingStore
 	protected $loaded = false;
 
 	/**
+	 * Default values.
+	 *
+	 * @var array
+	 */
+	protected $defaults = [];
+
+	/**
+	 * @var \Illuminate\Contracts\Cache\Store|\Illuminate\Cache\StoreInterface
+	 */
+	protected $cache = null;
+
+	/**
+	 * Cache TTL in seconds.
+	 *
+	 * @var int
+	 */
+	protected $cacheTtl = 15;
+
+	/**
+	 * Whether to reset the cache when changing a setting.
+	 *
+	 * @var boolean
+	 */
+	protected $cacheForgetOnWrite = true;
+
+	/**
+	 * Set default values.
+	 *
+	 * @param array $defaults
+	 */
+	public function setDefaults(array $defaults)
+	{
+		$this->defaults = $defaults;
+	}
+
+	/**
+	 * Set the cache.
+	 * @param \Illuminate\Contracts\Cache\Store|\Illuminate\Cache\StoreInterface $cache
+	 * @param int $ttl
+	 * @param bool $forgetOnWrite
+	 */
+	public function setCache($cache, $ttl = null, $forgetOnWrite = null)
+	{
+		$this->cache = $cache;
+		if ($ttl !== null) {
+			$this->cacheTtl = $ttl;
+		}
+		if ($forgetOnWrite !== null) {
+			$this->cacheForgetOnWrite = $forgetOnWrite;
+		}
+	}
+
+	/**
 	 * Get a specific key from the settings data.
 	 *
 	 * @param  string|array $key
@@ -44,8 +114,10 @@ abstract class SettingStore
 	 */
 	public function get($key, $default = null)
 	{
-		if ($default === NULL && !is_array($key)) {
-			$default = Config::get('settings.defaults.'.$key);
+		if ($default === NULL) {
+			$default = ArrayUtil::get($this->defaults, $key);
+		} elseif (is_array($key) && is_array($default)) {
+			$default = array_merge(ArrayUtil::get($this->defaults, $key, []), $default);
 		}
         
 		$this->load();
@@ -81,9 +153,11 @@ abstract class SettingStore
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {
 				ArrayUtil::set($this->data, $k, $v);
+				ArrayUtil::set($this->updatedData, $k, $v);
 			}
 		} else {
 			ArrayUtil::set($this->data, $key, $value);
+			ArrayUtil::set($this->updatedData, $key, $value);
 		}
 	}
 
@@ -98,6 +172,7 @@ abstract class SettingStore
 
 		if ($this->has($key)) {
 			ArrayUtil::forget($this->data, $key);
+			ArrayUtil::forget($this->updatedData, $key);
 		}
 	}
 
@@ -110,6 +185,7 @@ abstract class SettingStore
 	{
 		$this->unsaved = true;
 		$this->data = array();
+		$this->updatedData = array();
 	}
 
 	/**
@@ -137,6 +213,10 @@ abstract class SettingStore
 			return;
 		}
 
+		if ($this->cache && $this->cacheForgetOnWrite) {
+			$this->cache->forget(static::CACHE_KEY);
+		}
+
 		$this->write($this->data);
 		$this->unsaved = false;
 	}
@@ -149,9 +229,27 @@ abstract class SettingStore
 	public function load($force = false)
 	{
 		if (!$this->loaded || $force) {
-			$this->data = $this->read();
-			$this->loaded = true;
+			$this->data = $this->readData();
+            $this->persistedData = $this->data;
+            $this->data = array_merge($this->updatedData, $this->data);
+            $this->loaded = true;
 		}
+	}
+
+	/**
+	 * Read data from a store or cache
+	 *
+	 * @return array
+	 */
+	private function readData()
+	{
+		if ($this->cache) {
+			return $this->cache->remember(static::CACHE_KEY, $this->cacheTtl, function () {
+				return $this->read();
+			});
+		}
+
+		return $this->read();
 	}
 
 	/**

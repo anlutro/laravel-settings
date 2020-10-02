@@ -61,7 +61,12 @@ class ArrayUtil
 		$output = array();
 
 		foreach ($keys as $key) {
-			static::set($output, $key, static::get($input, $key, $default));
+			if ($default) {
+				$keyDefault = static::get($default, $key);
+			} else {
+				$keyDefault = null;
+			}
+			static::set($output, $key, static::get($input, $key, $keyDefault));
 		}
 
 		return $output;
