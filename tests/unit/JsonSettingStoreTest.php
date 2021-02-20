@@ -1,10 +1,12 @@
 <?php
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class JsonSettingStoreTest extends PHPUnit_Framework_TestCase
+
+class JsonSettingStoreTest extends TestCase
 {
-	public function tearDown()
+	public function tearDown(): void
 	{
 		m::close();
 	}

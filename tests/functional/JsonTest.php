@@ -21,7 +21,7 @@ class JsonTest extends AbstractFunctionalTest
 		);
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		$path = dirname(__DIR__).'/tmp/store.json';
 		unlink($path);

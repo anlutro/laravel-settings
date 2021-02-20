@@ -10,6 +10,7 @@
 namespace anlutro\LaravelSettings;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Arr;
 
 class DatabaseSettingStore extends SettingStore
 {
@@ -208,7 +209,7 @@ class DatabaseSettingStore extends SettingStore
 		$method = !method_exists($keysQuery, 'lists') ? 'pluck' : 'lists';
 		$keys = $keysQuery->$method($this->keyColumn);
 
-		$insertData = array_dot($data);
+		$insertData = Arr::dot($data);
 		$updateData = array();
 		$deleteKeys = array();
 

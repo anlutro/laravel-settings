@@ -2,7 +2,7 @@
 
 class DatabaseTest extends AbstractFunctionalTest
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->container = new \Illuminate\Container\Container;
 		$this->capsule = new \Illuminate\Database\Capsule\Manager($this->container);
@@ -22,7 +22,7 @@ class DatabaseTest extends AbstractFunctionalTest
 		});
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		$this->capsule->schema()->drop('persistant_settings');
 		unset($this->capsule);

@@ -1,10 +1,12 @@
 <?php
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
+
+class DatabaseSettingStoreTest extends TestCase
 {
-	public function tearDown()
+	public function tearDown(): void
 	{
 		m::close();
 	}
@@ -77,7 +79,7 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bar', $store->get('foo'));
 	}
 
-	/** @test */
+	/**  */
 	public function extra_columns_are_inserted()
 	{
 		$connection = $this->mockConnection();
@@ -99,8 +101,8 @@ class DatabaseSettingStoreTest extends PHPUnit_Framework_TestCase
         	}));
 		
 		$store = $this->makeStore($connection);
+        $store->set('foo', 'bar');
 		$store->setExtraColumns(array('extracol' => 'extradata'));
-		$store->set('foo', 'bar');
 		$store->save();
 	}
 
