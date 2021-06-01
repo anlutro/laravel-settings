@@ -6,7 +6,7 @@
 
 Persistent, application-wide settings for Laravel.
 
-Despite the package name, this package works with Laravel 4, 5, 6, 7 and 8!
+Despite the package name, this package should work with Laravel 4, 5, 6, 7 and 8 (though some versions are not automatically tested).
 
 ## Common problems
 
