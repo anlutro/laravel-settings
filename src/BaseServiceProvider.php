@@ -11,11 +11,11 @@
 namespace anlutro\LaravelSettings;
 
 if (interface_exists('Illuminate\Contracts\Support\DeferrableProvider') {
-	class BaseServiceProvider extends \Illuminate\Support\ServiceProvider implements \Illuminate\Contracts\Support\DeferrableProvider
-	{
+    class BaseServiceProvider extends \Illuminate\Support\ServiceProvider implements \Illuminate\Contracts\Support\DeferrableProvider
+    {
     }
 } else {
-	class BaseServiceProvider extends \Illuminate\Support\ServiceProvider
-	{
+class BaseServiceProvider extends \Illuminate\Support\ServiceProvider
+    {
     }
 }
