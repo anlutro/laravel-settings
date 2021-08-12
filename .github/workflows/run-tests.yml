@@ -30,4 +30,5 @@ jobs:
           php-version: ${{ matrix.php-version }}
           tools: composer
       - run: composer install --dev
-      - run: ./vendor/bin/phpunit
+      - name: php-${{matrix.php-version}}
+        run: ./vendor/bin/phpunit
