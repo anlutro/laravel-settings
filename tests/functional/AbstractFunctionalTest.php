@@ -145,4 +145,15 @@ abstract class AbstractFunctionalTest extends TestCase
 		$this->assertStoreEquals($store, ['foo' => 'bar']);
 		$this->assertStoreKeyEquals($store, ['foo', 'bar'], ['foo' => 'bar', 'bar' => 'default']);
 	}
+
+    /** @test */
+    public function numeric_keys_are_retrieved_correctly()
+    {
+        $store = $this->getStore();
+        $store->set('1234', 'foo');
+        $store->set('9876', 'bar');
+        $store->load(true);
+        $this->assertStoreEquals($store, ['1234' => 'foo', '9876' => 'bar']);
+        $this->assertStoreKeyEquals($store, ['1234', '9876'], ['1234' => 'foo', '9876' => 'bar']);
+    }
 }
