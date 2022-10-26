@@ -231,7 +231,7 @@ abstract class SettingStore
 		if (!$this->loaded || $force) {
 			$this->data = $this->readData();
             $this->persistedData = $this->data;
-            $this->data = array_merge($this->updatedData, $this->data);
+            $this->data = $this->updatedData + $this->data;
             $this->loaded = true;
 		}
 	}
