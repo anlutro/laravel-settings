@@ -11,7 +11,7 @@ namespace anlutro\LaravelSettings;
 
 use Illuminate\Filesystem\Filesystem;
 
-class JsonSettingStore extends SettingStore
+class JsonSettingStore extends CachedSettingStore
 {
 	/**
 	 * @param \Illuminate\Filesystem\Filesystem $files
