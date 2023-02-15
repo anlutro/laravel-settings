@@ -23,11 +23,16 @@ jobs:
           - '8.0'
           - '8.1'
           - '8.2'
+        dependency-versions:
+          - "lowest"
+          - "highest"
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          tools: composer
-      - run: composer install --dev
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependency-versions }}
       - run: ./vendor/bin/phpunit
