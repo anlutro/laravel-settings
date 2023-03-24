@@ -13,6 +13,12 @@ use Illuminate\Filesystem\Filesystem;
 
 class JsonSettingStore extends SettingStore
 {
+	/** \Illuminate\Filesystem\Filesystem */
+	public $files;
+
+	/** string Path to settings file. */
+	public $path;
+
 	/**
 	 * @param \Illuminate\Filesystem\Filesystem $files
 	 * @param string                           $path
