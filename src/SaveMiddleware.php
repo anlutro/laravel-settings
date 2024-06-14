@@ -24,7 +24,12 @@ if (interface_exists('Illuminate\Contracts\Routing\TerminableMiddleware')) {
 class SaveMiddleware implements LaravelIsStupidMiddleware
 {
 	/**
-	 * Create a new save settings middleware
+	 * @var SettingStore $settings
+	 */
+	private SettingStore $settings;
+
+	/**
+	 * Create a new save settings middleware.
 	 * 
 	 * @param SettingStore $settings
 	 */
