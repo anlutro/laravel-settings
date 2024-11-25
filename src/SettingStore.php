@@ -12,11 +12,6 @@ namespace anlutro\LaravelSettings;
 abstract class SettingStore
 {
 	/**
-	 * Cache key for save
-	 */
-	const CACHE_KEY = 'setting:cache';
-
-	/**
 	 * The settings data.
 	 *
 	 * @var array
@@ -59,25 +54,6 @@ abstract class SettingStore
 	protected $defaults = [];
 
 	/**
-	 * @var \Illuminate\Contracts\Cache\Store|\Illuminate\Cache\StoreInterface
-	 */
-	protected $cache = null;
-
-	/**
-	 * Cache TTL in seconds.
-	 *
-	 * @var int
-	 */
-	protected $cacheTtl = 15;
-
-	/**
-	 * Whether to reset the cache when changing a setting.
-	 *
-	 * @var boolean
-	 */
-	protected $cacheForgetOnWrite = true;
-
-	/**
 	 * Set default values.
 	 *
 	 * @param array $defaults
@@ -85,23 +61,6 @@ abstract class SettingStore
 	public function setDefaults(array $defaults)
 	{
 		$this->defaults = $defaults;
-	}
-
-	/**
-	 * Set the cache.
-	 * @param \Illuminate\Contracts\Cache\Store|\Illuminate\Cache\StoreInterface $cache
-	 * @param int $ttl
-	 * @param bool $forgetOnWrite
-	 */
-	public function setCache($cache, $ttl = null, $forgetOnWrite = null)
-	{
-		$this->cache = $cache;
-		if ($ttl !== null) {
-			$this->cacheTtl = $ttl;
-		}
-		if ($forgetOnWrite !== null) {
-			$this->cacheForgetOnWrite = $forgetOnWrite;
-		}
 	}
 
 	/**
@@ -213,10 +172,6 @@ abstract class SettingStore
 			return;
 		}
 
-		if ($this->cache && $this->cacheForgetOnWrite) {
-			$this->cache->forget(static::CACHE_KEY);
-		}
-
 		$this->write($this->data);
 		$this->unsaved = false;
 	}
@@ -237,18 +192,13 @@ abstract class SettingStore
 	}
 
 	/**
-	 * Read data from a store or cache
+	 * Read data from a store.
 	 *
 	 * @return array
 	 */
 	private function readData()
 	{
-		if ($this->cache) {
-			return $this->cache->remember(static::CACHE_KEY, $this->cacheTtl, function () {
-				return $this->read();
-			});
-		}
-
+		// note: this method exists purely for CachedSettingStore.
 		return $this->read();
 	}
 
