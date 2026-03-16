@@ -186,6 +186,7 @@ abstract class SettingStore
 		$this->unsaved = true;
 		$this->data = array();
 		$this->updatedData = array();
+		$this->loaded = false;
 	}
 
 	/**
@@ -224,15 +225,15 @@ abstract class SettingStore
 	/**
 	 * Make sure data is loaded.
 	 *
-	 * @param $force Force a reload of data. Default false.
+	 * @param bool $force Force a reload of data. Default false.
 	 */
-	public function load($force = false)
+	public function load(bool $force = false)
 	{
 		if (!$this->loaded || $force) {
 			$this->data = $this->readData();
-            $this->persistedData = $this->data;
-            $this->data = $this->updatedData + $this->data;
-            $this->loaded = true;
+            		$this->persistedData = $this->data;
+            		$this->data = $this->updatedData + $this->data;
+            		$this->loaded = true;
 		}
 	}
 
