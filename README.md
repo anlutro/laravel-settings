@@ -125,11 +125,12 @@ Setting::setConstraint(function($query, $insert) {
 
 ### Custom stores
 
-This package uses the Laravel `Manager` class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way. All you need to do is extend the abstract `SettingStore` class, implement the abstract methods and call `Setting::extend`.
+This package uses the Laravel `Manager` class under the hood, so it's easy to add your own custom session store driver if you want to store in some other way.
+All you need to do is extend the abstract `CachedSettingStore` class, implement the abstract methods and call `Setting::extend`.
 
 ```php
 <?php
-class MyStore extends anlutro\LaravelSettings\SettingStore {
+class MyStore extends anlutro\LaravelSettings\CachedSettingStore {
 	// ...
 }
 Setting::extend('mystore', function($app) {
@@ -138,6 +139,7 @@ Setting::extend('mystore', function($app) {
 ?>
 ```
 
+If you want your setting store to be exempt from Laravel's caching, extend from `SettingStore` instead.
 
 ## Contact
 
