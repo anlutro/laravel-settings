@@ -19,7 +19,8 @@
     "require-dev": {
         "phpunit/phpunit": "^8.0",
         "mockery/mockery": "^1.2",
-        "laravel/framework": ">=5.7"
+        "laravel/framework": ">=5.7",
+        "laravel/facade-documenter": "dev-main"
     },
     "autoload": {
         "files": [
@@ -39,6 +40,15 @@
             ]
         }
     },
+    "scripts": {
+        "facade:fix": "php -f vendor/bin/facade.php -- anlutro\\\\LaravelSettings\\\\Facades\\\\Setting",
+        "facade:lint": "php -f vendor/bin/facade.php -- --lint anlutro\\\\LaravelSettings\\\\Facades\\\\Setting"
+    },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "facade-documenter",
+        "type": "vcs",
+        "url": "https://github.com/laravel/facade-documenter.git"
+    }]
 }
