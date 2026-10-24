@@ -78,6 +78,9 @@ class JsonSettingStore extends SettingStore
 			$contents = '{}';
 		}
 
-		$this->files->put($this->path, $contents);
+		$result = $this->files->put($this->path, $contents);
+		if ($result === false) {
+			throw new \RuntimeException("Could not write to {$this->path}.");
+		}
 	}
 }
