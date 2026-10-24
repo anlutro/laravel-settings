@@ -58,4 +58,26 @@ class JsonSettingStoreTest extends TestCase
         $store = $this->makeStore($files);
         $store->get('foo');
     }
+
+	/** @test */
+	public function failed_save_throws_and_keeps_changes_for_retry()
+	{
+		$files = $this->mockFilesystem();
+		$files->shouldReceive('exists')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('isWritable')->once()->with('fakepath')->andReturn(true);
+		$files->shouldReceive('get')->once()->with('fakepath')->andReturn('{}');
+		$files->shouldReceive('put')->twice()->with('fakepath', '{"foo":"bar"}')->andReturn(false, 13);
+
+		$store = $this->makeStore($files);
+		$store->set('foo', 'bar');
+
+		try {
+			$store->save();
+			$this->fail('Expected a failed write to throw.');
+		} catch (RuntimeException $e) {
+			$this->assertSame('Could not write to fakepath.', $e->getMessage());
+		}
+
+		$store->save();
+	}
 }
